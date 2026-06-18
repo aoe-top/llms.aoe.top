@@ -1,0 +1,130 @@
+# 概述 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2025-03-26/basic
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:28.308Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 消息 请求
+- 响应
+- 通知
+- 批处理
+- 认证
+- 模式
+
+基础协议
+
+# 概述
+
+Copy page
+
+Copy page
+
+协议修订 : 2025-03-26
+
+Model Context Protocol 由几个关键组件组成，它们协同工作：
+
+- 基础协议 : 核心JSON-RPC消息类型
+
+- 生命周期管理 : 连接初始化、能力协商和会话控制
+
+- 服务器功能 : 服务器公开的资源、提示和工具
+
+- 客户端功能 : 客户端提供的采样和根目录列表
+
+- 工具 : 跨领域关注点，如日志记录和参数完成
+
+所有实现 必须 支持基础协议和生命周期管理组件。其他组件 可以 根据应用程序的具体需求实现。
+这些协议层建立了清晰的关注点分离，同时实现客户端和服务器之间的丰富交互。模块化设计允许实现支持它们确切需要的功能。
+
+## ​ 消息
+
+MCP客户端和服务器之间的所有消息 必须 遵循 JSON-RPC 2.0 规范。该协议定义了这些类型的消息：
+
+### ​ 请求
+
+请求从客户端发送到服务器或反之，用于启动操作。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 请求 必须 包含字符串或整数ID。
+
+- 与基础JSON-RPC不同，ID 不能 为 null 。
+
+- 请求ID 不能 在同一会话中被请求者之前使用过。
+
+### ​ 响应
+
+响应发送以回复请求，包含操作的结果或错误。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+result ?: {
+[key: string]: unknown ;
+}
+error ?: {
+code: number ;
+message : string ;
+data ?: unknown ;
+}
+}
+
+- 响应 必须 包含与其对应的请求相同的ID。
+
+- 响应 进一步细分为 成功结果 或 错误 。必须设置 result 或 error 中的一个。响应 不能 同时设置两者。
+
+- 结果 可以 遵循任何JSON对象结构，而错误 必须 至少包含错误代码和消息。
+
+- 错误代码 必须 是整数。
+
+### ​ 通知
+
+通知从客户端发送到服务器或反之，作为单向消息。接收者 不能 发送响应。
+
+{
+jsonrpc : "2.0" ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 通知 不能 包含ID。
+
+### ​ 批处理
+
+JSON-RPC还定义了一种通过在数组中发送来 批处理多个请求和通知 的手段。MCP实现 可以 支持发送JSON-RPC批次，但 必须 支持接收JSON-RPC批次。
+
+## ​ 认证
+
+MCP为HTTP使用提供了一个 授权 框架。使用基于HTTP传输的实现 应该 符合此规范，而使用STDIO传输的实现 不应该 遵循此规范，而是从环境中检索凭据。
+此外，客户端和服务器 可以 协商自己的自定义认证和授权策略。
+有关MCP认证机制演进的进一步讨论和贡献，请加入我们的 GitHub Discussions 来帮助塑造协议的未来！
+
+## ​ 模式
+
+协议的完整规范定义为 TypeScript模式 。这是所有协议消息和结构的真相来源。
+还有一个 JSON Schema ，它是从TypeScript真相来源自动生成的，用于各种自动化工具。
+
+架构 生命周期
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

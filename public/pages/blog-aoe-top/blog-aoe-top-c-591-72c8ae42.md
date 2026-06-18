@@ -1,0 +1,63 @@
+# 【C++】完美解决 “error C2001: 常量中有换行符” 的问题 | 小莫的博客园
+
+Source: https://blog.aoe.top/c/591
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:26:57.087Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 前言这个问题我最早是在16年遇到的, 当时是编写GTA5的ASI脚本, 然后是19年的时候编写荒野大镖客2的内置修改器时，也遇到了同样的问题, 当时我的解决方法写了一个 GBK To UTF8 方法来解决这个问题。 问题虽然解决了，但部分玩家会出现界面乱码的问题。 之后在今年9月的时候，XMDS 大佬告诉我了一个完美解决的方法： 文件编码照样用常规编码(如 UTF-8 with BOM) 在头文
+
+## Content
+
+# 【C++】完美解决 “error C2001: 常量中有换行符” 的问题
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 前言
+- 2. 原因
+- 3. 解决原理
+
+### 前言
+
+这个问题我最早是在16年遇到的, 当时是编写GTA5的ASI脚本, 然后是19年的时候编写荒野大镖客2的内置修改器时，也遇到了同样的问题, 当时我的解决方法写了一个 GBK To UTF8 方法来解决这个问题。
+
+问题虽然解决了，但部分玩家会出现界面乱码的问题。
+
+之后在今年9月的时候，XMDS 大佬告诉我了一个完美解决的方法：
+
+- 文件编码照样用常规编码(如 UTF-8 with BOM)
+
+- 在头文件(*.h)中添加 #pragma execution_character_set("utf-8") 即可完美解决这个问题。
+
+### 原因
+
+其实，这个问题在很久以前就一直存在, 有人也给微软发过工单反馈这个问题, 官方的回复是：
+
+The compiler when faced with a source file that does not have a BOM the compiler reads ahead a certain distance into the file to see if it can detect any Unicode characters - it specifically looks for UTF-16 and UTF-16BE - if it doesn’t find either then it assumes that it has MBCS. I suspect that in this case that in this case it falls back to MBCS and this is what is causing the problem.
+
+编译器在面对没有 BOM 的源文件时，编译器会提前读取文件一定距离以查看是否可以检测到任何 Unicode 字符 - 它专门寻找 UTF-16 和 UTF-16BE - 如果没有 找不到任何一个，然后它假定它有 MBCS。 我怀疑在这种情况下，它会退回到 MBCS，这就是导致问题的原因。
+
+虽然他们说就是这么设计的，如果不使用 UTF-8编码，中文在C++ 里面就完全是乱码, 但如果使用 UTF-8编码， 编译时就会报错 “error C2001: 常量中有换行符” 这确实是一个非常坑的问题。
+
+### 解决原理
+
+既然原文件的编码需要有 BOM 头， 那就给文件的编码加上嘛，加上之后，在头文件中添加 #pragma execution_character_set("utf-8") 告诉编译器, 你编译的时候这里的代码要用 utf-8编码进行编译， 这样就完美的解决问题了。
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+C++ , C2001 , error , 中文编码问题
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

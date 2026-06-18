@@ -1,0 +1,124 @@
+# 使用 Electron + Vue3 +Vite 创建应用程序 | 小莫的博客园
+
+Source: https://blog.aoe.top/NodeJS/Electron/616
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:30:21.992Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 介绍Electron 是一款非常好用的桌面GUI应用开发程序,它不仅支持跨平台,还支持众多web库来编写前端页面样式.要说它的缺点, 打包之后的程序太大了(因为里面包了一个Chromium浏览器), 如果用了第三方库，而你用的第三方库又用了另一个库,打包后运行会提示未找到xxx 库,而它不会一次性告诉你一共缺了哪些库,而得你自己一个一个找,并进行安装,可谓是很难受. 创建Electron +
+
+## Content
+
+# 使用 Electron + Vue3 +Vite 创建应用程序
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 介绍
+- 2. 创建Electron + Vue3 +Vite程序
+- 3. 界面截图
+- 4. Electron 是什么?
+- 5. Vue 是什么?
+- 6. Vite 是什么?
+
+### 介绍
+
+Electron 是一款非常好用的桌面GUI应用开发程序,它不仅支持跨平台,还支持众多web库来编写前端页面样式.
+要说它的缺点,
+
+- 打包之后的程序太大了(因为里面包了一个Chromium浏览器),
+
+- 如果用了第三方库，而你用的第三方库又用了另一个库,打包后运行会提示未找到xxx 库,而它不会一次性告诉你一共缺了哪些库,而得你自己一个一个找,并进行安装,可谓是很难受.
+
+### 创建Electron + Vue3 +Vite程序
+
+快速创建
+
+1
+2
+3
+4
+
+|
+npm create electron-vite
+cd electron-vite-vue
+yarn
+yarn run dev
+
+|
+
+然后你就可以像写vue3的程序一样写前端UI了.
+
+由于我的个人习惯,每次都会装一堆我要用的库,于是就有了这个库的诞生: https://github.com/3DMXM/electron-vue-vite
+
+我的这个库在原项目基础上添加了以下功能:
+
+- 无边框窗口
+
+- 美化窗口头部样式
+
+- 使用 element-plus 作为页面UI框架
+
+- 使用 vue-router 制作页面跳转
+
+- 使用 pinia 作为跨页面/跨组件数据通信
+
+- 使用 less 编写页面样式
+
+- 关于页面同步显示 README.Md 的内容
+
+使用:
+
+1
+2
+3
+4
+
+|
+git clone https://github.com/3DMXM/electron-vue-vite
+cd electron-vue-vite
+yarn
+yarn run dev
+
+|
+
+备注:
+如果你使用 yarn i 安装很慢，可以尝试配置国内代理
+
+### 界面截图
+
+### Electron 是什么?
+
+Electron是GitHub开发的一个开源框架。它通过使用Node.js和Chromium的渲染引擎完成跨平台的桌面GUI应用程序的开发。Electron现已被多个开源Web应用程序用于前端与后端的开发，著名项目包括GitHub的Atom和微软的Visual Studio Code。
+
+### Vue 是什么?
+
+Vue (发音为 /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。
+
+### Vite 是什么?
+
+Vite（法语意为 “快速的”，发音 /vit/，发音同 “veet”）是一种新型前端构建工具，能够显著提升前端开发体验。它主要由两部分组成：
+
+- 一个开发服务器，它基于 原生 ES 模块 提供了 丰富的内建功能，如速度快到惊人的 模块热更新（HMR）。
+
+- 一套构建指令，它使用 Rollup 打包你的代码，并且它是预配置的，可输出用于生产环境的高度优化过的静态资源。
+
+Vite 意在提供开箱即用的配置，同时它的 插件 API 和 JavaScript API 带来了高度的可扩展性，并有完整的类型支持。
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+Electron , Vite , Vue3
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

@@ -1,0 +1,407 @@
+# 工具 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2025-06-18/server/tools
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:32.183Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 用户交互模型
+- 能力
+- 协议消息 列出工具
+- 调用工具
+- 列表变更通知
+- 消息流程
+- 数据类型 工具
+- 工具结果
+- 文本内容
+- 图像内容
+- 音频内容
+- 资源链接
+- 嵌入资源
+- 结构化内容
+- 输出模式
+- 错误处理
+- 安全注意事项
+
+服务器功能
+
+# 工具
+
+Copy page
+
+Copy page
+
+协议修订版 ：2025-06-18
+
+Model Context Protocol (MCP) 允许服务器暴露可以被语言模型调用的工具。工具使模型能够与外部系统交互，例如查询数据库、调用 API 或执行计算。每个工具由一个名称唯一标识，并包含描述其模式的元数据。
+
+## ​ 用户交互模型
+
+MCP 中的工具被设计为 模型控制 ，这意味着语言模型可以基于其上下文理解和用户的提示自动发现和调用工具。
+但是，实现可以自由地通过任何适合其需求的界面模式来暴露工具——协议本身并不强制要求任何特定的用户交互模型。
+
+为了信任、安全性和安全性， 应该 始终有人工介入，能够拒绝工具调用。 应用程序 应该 ：
+
+- 提供清晰显示哪些工具被暴露给 AI 模型的 UI
+
+- 在工具被调用时插入清晰的视觉指示器
+
+- 为操作呈现确认提示给用户，以确保有人工介入
+
+## ​ 能力
+
+支持工具的服务器 必须 声明 tools 能力：
+
+{
+"capabilities" : {
+"tools" : {
+"listChanged" : true
+}
+}
+}
+
+listChanged 表示当可用工具列表发生变化时，服务器是否会发出通知。
+
+## ​ 协议消息
+
+### ​ 列出工具
+
+要发现可用工具，客户端发送 tools/list 请求。此操作支持 分页 。
+请求：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 1 ,
+"method" : "tools/list" ,
+"params" : {
+"cursor" : "optional-cursor-value"
+}
+}
+
+响应：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 1 ,
+"result" : {
+"tools" : [
+{
+"name" : "get_weather" ,
+"title" : "天气信息提供者" ,
+"description" : "获取某个位置的当前天气信息" ,
+"inputSchema" : {
+"type" : "object" ,
+"properties" : {
+"location" : {
+"type" : "string" ,
+"description" : "城市名称或邮政编码"
+}
+},
+"required" : [ "location" ]
+}
+}
+],
+"nextCursor" : "next-page-cursor"
+}
+}
+
+### ​ 调用工具
+
+要调用工具，客户端发送 tools/call 请求：
+请求：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 2 ,
+"method" : "tools/call" ,
+"params" : {
+"name" : "get_weather" ,
+"arguments" : {
+"location" : "New York"
+}
+}
+}
+
+响应：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 2 ,
+"result" : {
+"content" : [
+{
+"type" : "text" ,
+"text" : "纽约当前天气： \n 温度：72°F \n 状况：部分多云"
+}
+],
+"isError" : false
+}
+}
+
+### ​ 列表变更通知
+
+当可用工具列表发生变化时，声明了 listChanged 能力的服务器 应该 发送通知：
+
+{
+"jsonrpc" : "2.0" ,
+"method" : "notifications/tools/list_changed"
+}
+
+## ​ 消息流程
+
+## ​ 数据类型
+
+### ​ 工具
+
+工具定义包括：
+
+- name ：工具的唯一标识符
+
+- title ：可选的用于显示目的的人类可读工具名称。
+
+- description ：功能的人类可读描述
+
+- inputSchema ：定义预期参数的 JSON Schema
+
+- outputSchema ：可选的定义预期输出结构的 JSON Schema
+
+- annotations ：可选的描述工具行为的属性
+
+为了信任、安全性和安全性，客户端 必须 将工具注解视为不可信的，除非它们来自受信任的服务器。
+
+### ​ 工具结果
+
+工具结果可能包含 结构化 或 非结构化 内容。
+非结构化 内容在结果的 content 字段中返回，可以包含多个不同类型的內容项：
+
+所有内容类型（文本、图像、音频、资源链接和嵌入资源）都支持可选的
+注解 ，这些注解
+提供关于受众、优先级和修改时间的元数据。这是资源和提示使用的相同注解格式。
+
+#### ​ 文本内容
+
+{
+"type" : "text" ,
+"text" : "工具结果文本"
+}
+
+#### ​ 图像内容
+
+{
+"type" : "image" ,
+"data" : "base64-encoded-data" ,
+"mimeType" : "image/png"
+"annotations" : {
+"audience" : [ "user" ],
+"priority" : 0.9
+}
+
+}
+
+此示例演示了可选注解的使用。
+
+#### ​ 音频内容
+
+{
+"type" : "audio" ,
+"data" : "base64-encoded-audio-data" ,
+"mimeType" : "audio/wav"
+}
+
+#### ​ 资源链接
+
+工具 可以 返回指向 资源 的链接，以提供额外上下文或数据。在这种情况下，工具将返回一个可以被客户端订阅或获取的 URI：
+
+{
+"type" : "resource_link" ,
+"uri" : "file:///project/src/main.rs" ,
+"name" : "main.rs" ,
+"description" : "主要应用程序入口点" ,
+"mimeType" : "text/x-rust" ,
+"annotations" : {
+"audience" : [ "assistant" ],
+"priority" : 0.9
+}
+}
+
+资源链接支持与常规资源相同的 资源注解 ，以帮助客户端理解如何使用它们。
+
+工具返回的资源链接不能保证出现在 resources/list 请求的结果中。
+
+#### ​ 嵌入资源
+
+资源 可以 被嵌入以使用合适的 URI 方案 提供额外上下文或数据。使用嵌入资源的服务器 应该 实现 resources 能力：
+
+{
+"type" : "resource" ,
+"resource" : {
+"uri" : "file:///project/src/main.rs" ,
+"title" : "项目 Rust 主文件" ,
+"mimeType" : "text/x-rust" ,
+"text" : "fn main() { \n println!( \" Hello world! \" ); \n }" ,
+"annotations" : {
+"audience" : [ "user" , "assistant" ],
+"priority" : 0.7 ,
+"lastModified" : "2025-05-03T14:30:00Z"
+}
+}
+}
+
+嵌入资源支持与常规资源相同的 资源注解 ，以帮助客户端理解如何使用它们。
+
+#### ​ 结构化内容
+
+结构化 内容作为 JSON 对象在结果的 structuredContent 字段中返回。
+为了向后兼容，返回结构化内容的工具应该也在 TextContent 块中返回序列化的 JSON。
+
+#### ​ 输出模式
+
+工具也可以提供输出模式用于验证结构化结果。如果提供了输出模式：
+
+- 服务器 必须 提供符合此模式的结构化结果。
+
+- 客户端 应该 根据此模式验证结构化结果。
+
+带输出模式的工具示例：
+
+{
+"name" : "get_weather_data" ,
+"title" : "Weather Data Retriever" ,
+"description" : "Get current weather data for a location" ,
+"inputSchema" : {
+"type" : "object" ,
+"properties" : {
+"location" : {
+"type" : "string" ,
+"description" : "City name or zip code"
+}
+},
+"required" : [ "location" ]
+},
+"outputSchema" : {
+"type" : "object" ,
+"properties" : {
+"temperature" : {
+"type" : "number" ,
+"description" : "Temperature in celsius"
+},
+"conditions" : {
+"type" : "string" ,
+"description" : "Weather conditions description"
+},
+"humidity" : {
+"type" : "number" ,
+"description" : "Humidity percentage"
+}
+},
+"required" : [ "temperature" , "conditions" , "humidity" ]
+}
+}
+
+Example valid response for this tool:
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 5 ,
+"result" : {
+"content" : [
+{
+"type" : "text" ,
+"text" : "{ \" temperature \" : 22.5, \" conditions \" : \" Partly cloudy \" , \" humidity \" : 65}"
+}
+],
+"structuredContent" : {
+"temperature" : 22.5 ,
+"conditions" : "Partly cloudy" ,
+"humidity" : 65
+}
+}
+}
+
+提供输出模式有助于客户端和 LLM 理解并正确处理结构化工具输出，通过：
+
+- 启用响应的严格模式验证
+
+- 为更好地与编程语言集成提供类型信息
+
+- 指导客户端和 LLM 正确解析和利用返回的数据
+
+- 支持更好的文档和开发者体验
+
+## ​ 错误处理
+
+工具使用两种错误报告机制：
+
+- 协议错误 ：用于如下问题的标准 JSON-RPC 错误： 未知工具
+
+- 无效参数
+
+- 服务器错误
+
+- 工具执行错误 ：在工具结果中报告，带有 isError: true ： API 失败
+
+- 无效输入数据
+
+- 业务逻辑错误
+
+协议错误示例：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 3 ,
+"error" : {
+"code" : -32602 ,
+"message" : "未知工具：invalid_tool_name"
+}
+}
+
+工具执行错误示例：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 4 ,
+"result" : {
+"content" : [
+{
+"type" : "text" ,
+"text" : "获取天气数据失败：API 速率限制超出"
+}
+],
+"isError" : true
+}
+}
+
+## ​ 安全注意事项
+
+- 服务器 必须 ： 验证所有工具输入
+
+- 实现适当的访问控制
+
+- 对工具调用进行速率限制
+
+- 清理工具输出
+
+- 客户端 应该 ： 在敏感操作上提示用户确认
+
+- 在调用服务器之前向用户显示工具输入，以避免恶意或意外的数据泄露
+
+- 在传递给 LLM 之前验证工具结果
+
+- 为工具调用实现超时
+
+- 记录工具使用情况以进行审计
+
+资源 完成
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

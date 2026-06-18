@@ -1,0 +1,61 @@
+# robots.txt for https://llms.aoe.top
+# General web, search, retrieval, and user-triggered AI crawlers are allowed.
+# Listed training-only or broad AI crawlers are blocked below.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://llms.aoe.top/sitemap.xml
+
+# Search and retrieval crawlers
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+# User-triggered crawlers
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Agent
+Allow: /
+
+# Training-only or broad AI crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Crawl-delay: 1

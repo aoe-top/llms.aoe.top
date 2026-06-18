@@ -1,0 +1,129 @@
+# Linux服务器安装Python | 小莫的博客园
+
+Source: https://blog.aoe.top/Python/343
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:08.809Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 由于centos7原本就安装了Python2，而且这个Python2不能被删除，因为有很多系统命令，比如yum都要用到。 1234[root@iZuf6ititjgl7x9tgf1cyiZ ~]# pythonPython 2.6.6 (r266:84292, Aug 18 2016, 15:13:37)[GCC 4.4.7 20120313 (Red Hat 4.4.7-17)] on linu
+
+## Content
+
+# Linux服务器安装Python
+
+- 2023-07-07
+
+- 作者 小莫
+
+由于centos7原本就安装了Python2，而且这个Python2不能被删除，因为有很多系统命令，比如yum都要用到。
+
+1
+2
+3
+4
+
+|
+[root@iZuf6ititjgl7x9tgf1cyiZ ~]# python
+Python 2.6.6 (r266:84292, Aug 18 2016, 15:13:37)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-17)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+
+|
+
+输入Python命令，查看可以得知是Python2.6.6版本
+
+输入
+
+1
+
+|
+which python
+
+|
+
+可以查看位置，一般是位于/usr/bin/python目录下。
+
+下面介绍安装Python3的方法
+
+首先安装依赖包
+
+1
+2
+
+|
+yum -y groupinstall "Development tools"
+yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+
+|
+
+建立一个空文件夹
+
+1
+
+|
+mkdir /usr/local/python3
+
+|
+
+进入这个文件夹：
+
+1
+
+|
+cd /usr/local/python3
+
+|
+
+然后根据自己需求下载不同版本的Python3，我下载的是Python3.6.2
+
+1
+
+|
+wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tar.xz
+
+|
+
+然后解压压缩包，进入该目录，安装Python3
+
+1
+2
+3
+4
+
+|
+tar -xvJf Python-3.6.2.tar.xz
+cd Python-3.6.2
+./configure --prefix=/usr/local/python3
+make && make install
+
+|
+
+最后创建软链接
+
+1
+2
+
+|
+ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
+
+|
+
+在命令行中输入python3测试
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+Linux , Python , 安装 , 服务器
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-06-18T03:10:14.671Z",
+  "siteUrl": "https://llms.aoe.top",
+  "sourceUrl": "https://github.com/aoe-top/api.aoe.top/blob/master/server/utils/friendly.ts",
+  "maxPagesPerSite": 1200,
+  "siteCount": 37,
+  "pageCount": 1624,
+  "capturedPageCount": 1508,
+  "failedPageCount": 88,
+  "emptyTextPageCount": 28,
+  "textChars": 3163996
+}

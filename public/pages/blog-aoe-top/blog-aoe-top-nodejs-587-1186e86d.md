@@ -1,0 +1,241 @@
+# 【NodeJS】Express 中的路由 | 小莫的博客园
+
+Source: https://blog.aoe.top/NodeJS/587
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:07.925Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 路由 借助 express 后，我们可以非常简单的定义路由 路由表示应用程序端点 (URI) 的定义以及端点响应客户机请求的方式。 有关路由的简介，请参阅基本路由。 我们所使用的 app 与 HTTP 方法相对应的 Express 对象方法来定义路由，如 app.get() 用于处理 GET 请求，而 app.post 则用于处理 POST 请求。 这些路由方法都指定了回调函数（或者：“处理程序
+
+## Content
+
+# 【NodeJS】Express 中的路由
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 路由 1.1. 路由方法
+- 1.2. 路由路径
+
+## 路由
+
+借助 express 后，我们可以非常简单的定义路由
+
+路由表示应用程序端点 (URI) 的定义以及端点响应客户机请求的方式。 有关路由的简介，请参阅 基本路由 。
+
+我们所使用的 app 与 HTTP 方法相对应的 Express 对象方法来定义路由，如 app.get() 用于处理 GET 请求，而 app.post 则用于处理 POST 请求。
+
+这些路由方法都指定了回调函数（或者：“处理程序函数”），当程序接收到指定的路由（端点）的时候（也就是说 HTTP 方法请求时被调用），来调用回调函数，换句话说就是应用程序监听与指定路由和方法匹配的请求，当检测到匹配时，他会调用对应的回调函数。
+
+以下代码是非常基本的路由示例。
+
+1
+2
+3
+4
+5
+6
+7
+
+|
+var express = require('express');
+var app = express();
+
+// 当对主页发出 GET 请求时，响应“hello world”
+app.get('/', function(req, res) {
+res.send('hello world');
+});
+
+|
+
+#### 路由方法
+
+请求路由有两种方法，分别是GET 和 POST ，方法定义的路由示例：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+|
+// GET请求响应
+app.get('/', function (req, res) {
+res.send('这是由GET请求后返回的首页');
+});
+
+// POST 请求响应
+app.post('/', function (req, res) {
+res.send('这是由POST请求后返回的首页');
+});
+
+|
+
+Express 支持对应于 HTTP 方法的以下路由方法：get、post、put、head、delete、options、trace、copy、lock、mkcol、move、purge、propfind、proppatch、unlock、report、mkactivity、checkout、merge、m-search、notify、subscribe、unsubscribe、patch、search 和 connect。
+
+要是路由会转换为无效 JavaScript 变量名称的方法，请使用括号表示法。例如，app[‘m-search’](‘/‘, function …
+
+有一种特殊路由方法：app.all()，它并非派生自 HTTP 方法。该方法用于在所有请求方法的路径中装入中间件函数。
+
+在以下示例中，无论您使用 GET、POST、PUT、DELETE 还是在 http 模块 中支持的其他任何 HTTP 请求方法，都将为针对“/secret”的请求执行处理程序。
+
+1
+2
+3
+4
+
+|
+app.all('/secret', function (req, res, next) {
+console.log('做一些事情 ...');
+next(); // 将控制权传递给下一个处理程序
+});
+
+|
+
+#### 路由路径
+
+路由路径与请求方法相结合，用于定义可以在其中提出请求的端点。路由路径可以是字符串、字符串模式或正则表达式。
+
+以下是基于字符串的路由路径的一些示例。
+此路由路径将请求与根路由 / 匹配。
+
+1
+2
+3
+
+|
+app.get('/', function (req, res) {
+res.send('主页');
+});
+
+|
+
+此路由路径将请求与 /about 匹配。
+
+1
+2
+3
+
+|
+app.get('/about', function (req, res) {
+res.send('关于页面');
+});
+
+|
+
+此路由路径将请求与 /random.text 匹配。
+
+1
+2
+3
+
+|
+app.get('/random.text', function (req, res) {
+res.send('假装这里是random.text文件里面的内容');
+});
+
+|
+
+路由中还支持字符串模式的简单正则
+此路由路径将匹配 acd 和 abcd：
+
+1
+2
+3
+
+|
+app.get('/ab?cd', function(req, res) {
+res.send('ab?cd');
+});
+
+|
+
+此路由路径将匹配 abcd、abbcd、abbbcd 等：
+
+1
+2
+3
+
+|
+app.get('/ab+cd', function(req, res) {
+res.send('ab+cd');
+});
+
+|
+
+此路由路径将匹配 abcd、abxcd、abRABDOMcd、ab123cd 等:
+
+1
+2
+3
+
+|
+app.get('/ab*cd', function(req, res) {
+res.send('ab*cd');
+});
+
+|
+
+此路由路径将匹配 /abe 和 /abcde:
+
+1
+2
+3
+
+|
+app.get('/ab(cd)?e', function(req, res) {
+res.send('ab(cd)?e');
+});
+
+|
+
+字符 ?、+、* 和 () 是其正则表达式同应项的子集。基于字符串的路径按字面理解连字符 (-) 和点 (.)。
+
+甚至可以直接使用正则表达式来定义路由。
+此路由路径将匹配名称中具有“a”的所有路由：
+
+1
+2
+3
+
+|
+app.get(/a/, function(req, res) {
+res.send('/a/');
+});
+
+|
+
+此路由路径将匹配 butterfly 和 dragonfly，但是不匹配 butterflyman、dragonfly man 等:
+
+1
+2
+3
+
+|
+app.get(/.*fly$/, function(req, res) {
+res.send('/.*fly$/');
+});
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+NodeJs , express , 路由
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

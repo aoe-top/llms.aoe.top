@@ -1,0 +1,148 @@
+# 概述 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2025-06-18/basic
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:28.232Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 消息 请求
+- 响应
+- 通知
+- 认证
+- 模式 通用字段
+- _meta
+
+基础协议
+
+# 概述
+
+Copy page
+
+Copy page
+
+协议修订版 ：2025-06-18
+
+模型上下文协议由几个协同工作的关键组件组成：
+
+- 基础协议 ：核心 JSON-RPC 消息类型
+
+- 生命周期管理 ：连接初始化、功能协商和会话控制
+
+- 授权 ：基于 HTTP 的传输的认证和授权框架
+
+- 服务器功能 ：服务器暴露的资源、提示和工具
+
+- 客户端功能 ：客户端提供的采样和根目录列表
+
+- 工具 ：跨领域关注点，如日志记录和参数完成
+
+所有实现 必须 支持基础协议和生命周期管理组件。其他组件 可以 根据应用程序的具体需求实现。
+这些协议层建立了清晰的关注点分离，同时实现客户端和服务器之间的丰富交互。模块化设计允许实现仅支持它们需要的功能。
+
+## ​ 消息
+
+MCP 客户端和服务器之间的所有消息 必须 遵循 JSON-RPC 2.0 规范。该协议定义了这些类型的消息：
+
+### ​ 请求
+
+请求从客户端发送到服务器或反之，用于发起操作。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 请求 必须 包含字符串或整数 ID。
+
+- 与基础 JSON-RPC 不同，ID 不得 为 null 。
+
+- 请求 ID 不得 在同一会话中被请求者先前使用。
+
+### ​ 响应
+
+响应发送以回复请求，包含操作的结果或错误。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+result ?: {
+[key: string]: unknown ;
+}
+error ?: {
+code: number ;
+message : string ;
+data ?: unknown ;
+}
+}
+
+- 响应 必须 包含与其对应的请求相同的 ID。
+
+- 响应 进一步分类为 成功结果 或 错误 。 必须 设置 result 或 error 之一。响应 不得 同时设置两者。
+
+- 结果 可以 遵循任何 JSON 对象结构，而错误 必须 至少包含错误代码和消息。
+
+- 错误代码 必须 是整数。
+
+### ​ 通知
+
+通知作为单向消息从客户端发送到服务器或反之。接收者 不得 发送响应。
+
+{
+jsonrpc : "2.0" ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 通知 不得 包含 ID。
+
+## ​ 认证
+
+MCP 为 HTTP 提供了一个 授权 框架。使用基于 HTTP 的传输的实现 应该 符合此规范，而使用 STDIO 传输的实现 不应该 遵循此规范，而是从环境中检索凭据。
+此外，客户端和服务器 可以 协商自己的自定义认证和授权策略。
+有关 MCP 认证机制演进的进一步讨论和贡献，请加入我们在 GitHub Discussions 的讨论，帮助塑造协议的未来！
+
+## ​ 模式
+
+协议的完整规范定义为 TypeScript 模式 。这是所有协议消息和结构的权威来源。
+还有一个 JSON Schema ，它是从权威的 TypeScript 源自动生成的，用于各种自动化工具。
+
+### ​ 通用字段
+
+#### ​ _meta
+
+_meta 属性/参数由 MCP 保留，以允许客户端和服务器为其交互附加额外元数据。
+某些键名由 MCP 为协议级元数据保留，如下所述；实现不得对这些键的值做出假设。
+此外， 模式 中的定义可能会为特定目的的元数据保留特定名称，如这些定义中声明的那样。
+键名格式： 有效的 _meta 键名有两个段：可选的 前缀 和 名称 。
+前缀：
+
+- 如果指定，必须是一系列以点 ( . ) 分隔的标签，后跟斜杠 ( / )。 标签必须以字母开头，以字母或数字结尾；内部字符可以是字母、数字或连字符 ( - )。
+
+- 以零个或多个有效标签开头，后跟 modelcontextprotocol 或 mcp ，后跟任何有效标签的前缀 保留 供 MCP 使用。 例如： modelcontextprotocol.io/ 、 mcp.dev/ 、 api.modelcontextprotocol.org/ 和 tools.mcp.com/ 都保留。
+
+名称：
+
+- 除非为空，否则必须以字母数字字符 ( [a-z0-9A-Z] ) 开头和结尾。
+
+- 可以在中间包含连字符 ( - )、下划线 ( _ )、点 ( . ) 和字母数字字符。
+
+架构 生命周期
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

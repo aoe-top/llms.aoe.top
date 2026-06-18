@@ -1,0 +1,735 @@
+# 【Hook】 AOB Hook 游戏函数 教程 | 小莫的博客园
+
+Source: https://blog.aoe.top/c/635
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:26:57.748Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 讲师：XMDS整理：小莫 所需工具： vs code cmake 使用库 https://github.com/thelink2012/injector https://github.com/ThirteenAG/Hooking.Patterns 为什么用 AOB ？AOB 是 反汇编 byte, 在IDA 中可使用快捷键 Alt+B 来搜索 AOB. 同一个游戏 不同的版本有不同的内存地址
+
+## Content
+
+# 【Hook】 AOB Hook 游戏函数 教程
+
+- 2023-11-17
+
+- 作者 小莫
+
+- 1. 所需工具：
+- 2. 使用库
+- 3. 为什么用 AOB ？
+- 4. 创建项目
+- 5. 开始hook 5.1. 使用 pattern 获取地址
+- 5.2. 创建 25FF jmp 方法
+- 5.3. 备份原地址 并 分配内存写入权限
+- 5.4. 设置跳转指令 / 复制原函数
+- 5.5. 创建hook函数
+- 5.6. 完整示例
+- 6. 封装hook 6.1. 调用
+
+讲师：XMDS
+整理：小莫
+
+### 所需工具：
+
+- vs code
+
+- cmake
+
+### 使用库
+
+- https://github.com/thelink2012/injector
+
+- https://github.com/ThirteenAG/Hooking.Patterns
+
+### 为什么用 AOB ？
+
+AOB 是 反汇编 byte, 在IDA 中可使用快捷键 Alt+B 来搜索 AOB.
+
+同一个游戏 不同的版本有不同的内存地址, 但是版本迭代肯定是基于稳定版的第一个版本更新的
+所以会有重复代码, 通过查找汇编的byte码获得内存地址, 这样无论哪个游戏版本都通用.
+
+一般查函数地址这样不管游戏怎么更新 都能查到, 就算这个函数下次更新 游戏改变了代码, 可以使用模糊查找,用 ?? 填充, 只要有几个共性就行.
+
+实现原理是, 获取程序的首地址 一个字节一个字节的查 去比较.
+
+如果程序很大, 你只想查可执行代码段.text, 变量段.data之类的,那么解析下pe文件或者elf文件,把首地址以段的首地址查就行了,
+
+### 创建项目
+
+首先, 创建 CMakeLists.txt 文件，写入以下内容
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+
+|
+# CMakeLists
+
+# CMake 最低版本号要求
+cmake_minimum_required (VERSION 3.26 . 1 )
+
+# 项目信息
+project (MyHook VERSION 1.0 . 0 LANGUAGES C CXX)
+
+# 指定为C++17 版本
+set (CMAKE_CXX_STANDARD 17 )
+
+# 配置 vcpkg
+set (CMAKE_PREFIX_PATH "E:\\GitHub\\vcpkg\\packages" )
+
+include (CTest)
+enable_testing ()
+
+# 查找目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory (src/ DIR_SRCS)
+
+# 引入 include 目录
+include_directories ( ${CMAKE_SOURCE_DIR} / include )
+
+# 指定生成目标 第一个参数为你需要构建的dll的名字，第二个为类型
+add_library ( ${PROJECT_NAME} SHARED ${DIR_SRCS} )
+
+# 配置导出目录
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY out)
+
+# add_library(${PROJECT_NAME} )
+set (CPACK_PROJECT_NAME ${PROJECT_NAME} )
+set (CPACK_PROJECT_VERSION ${PROJECT_VERSION} )
+include (CPack)
+
+# 为dll设置linker
+# 指定dll的生成目录，这里是：./out
+SET_TARGET_PROPERTIES ( ${CPACK_PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C
+RUNTIME_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+OUTPUT_NAME ${CPACK_PROJECT_NAME}
+PREFIX "" )
+
+|
+
+目录结构:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+|
+MyHook/
+
+└── include/
+| └── injector/
+| └── injector库的文件...
+├── src/
+| ├── dllmain.hpp
+| ├── Hooking.Patterns.cpp
+| ├── Hooking.Patterns.h
+| ├── MyHook.cpp
+| └── MyHook.h
+└── CMakeLists.txt
+
+|
+
+在 dllmain.hpp 文件中引入我们可能需要的库
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+|
+# pragma once
+# include <Windows.h>
+# include <iostream>
+# include <process.h>
+# include <sstream>
+# include <map>
+# include <filesystem>
+
+# include "Hooking.Patterns.h"
+# include <injector/injector.hpp>
+# include <injector/hooking.hpp>
+
+|
+
+然后在 MyHook.h 中引入 #include "dllmain.hpp" ,
+在 MyHook.cpp 中 引入 #include "MyHook.h"
+
+### 开始hook
+
+比如说, 我们要hook这个函数：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+|
+.text:0000000142071FD0 ; __int64 __fastcall loadFile_step2(__int64, __int64, int)
+.text:0000000142071FD0 loadFile_step2 proc near ; CODE XREF: loadFile+9↑p
+.text:0000000142071FD0 ; sub_142118FD0+D1↓p
+.text:0000000142071FD0 ; sub_14284EF20+1B4↓p
+.text:0000000142071FD0 ; sub_14288B220+6C4↓p
+.text:0000000142071FD0 ; sub_14584E3D0+80↓p
+.text:0000000142071FD0 ; DATA XREF: .pdata:000000014985AACC↓o
+.text:0000000142071FD0
+.text:0000000142071FD0 arg_0= qword ptr 8
+.text:0000000142071FD0 arg_8= qword ptr 10h
+.text:0000000142071FD0 arg_10= qword ptr 18h
+.text:0000000142071FD0
+.text:0000000142071FD0 48 89 5C 24 08 mov [rsp+arg_0], rbx
+.text:0000000142071FD5 48 89 6C 24 10 mov [rsp+arg_8], rbp
+.text:0000000142071FDA 48 89 74 24 18 mov [rsp+arg_10], rsi
+.text:0000000142071FDF 57 push rdi
+.text:0000000142071FE0 48 83 EC 20 sub rsp, 20h
+.text:0000000142071FE4 48 8B F1 mov rsi, rcx
+.text:0000000142071FE7 44 89 41 08 mov [rcx+8], r8d
+.text:0000000142071FEB 48 8D 05 9E B5 87 03 lea rax, off_1458ED590
+.text:0000000142071FF2 48 8B EA mov rbp, rdx
+.text:0000000142071FF5 48 89 01 mov [rcx], rax
+.text:0000000142071FF8 41 8B F8 mov edi, r8d
+.text:0000000142071FFB 48 8D 05 DE BE 84 03 lea rax, off_1458BDEE0
+.text:0000000142072002 48 89 41 10 mov [rcx+10h], rax
+.text:0000000142072006 48 8D 56 10 lea rdx, [rsi+10h]
+.text:000000014207200A 48 83 C1 18 add rcx, 18h
+.text:000000014207200E E8 8D FB FA FF call sub_142021BA0
+
+|
+
+#### 使用 pattern 获取地址
+
+1
+2
+3
+4
+5
+6
+
+|
+auto pattern = hook:: pattern ( "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B F1 44 89 41 08" );
+if (!pattern. count_hint ( 1 ). empty ())
+{
+auto func_addr = pattern. get_first ( 0 ); // func_addr 是 loadFile_step2 的地址,
+}
+
+|
+
+#### 创建 25FF jmp 方法
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+|
+# define JMPSIZE 14
+
+inline injector::memory_pointer_raw MakeAbsJMP (injector::memory_pointer_tr at, injector::memory_pointer_raw dest, bool vp = true )
+{
+injector:: WriteMemory < uint16_t >(at, 0x25FF , vp);
+injector:: WriteMemory < uint32_t >(at + sizeof ( uint16_t ), 0 , vp);
+injector:: WriteMemory < uint64_t >(at + sizeof ( uint16_t ) + sizeof ( uint32_t ), dest. as_int (), vp);
+return at. as_int () + JMPSIZE;
+}
+
+|
+
+#### 备份原地址 并 分配内存写入权限
+
+我们备份至少需要 14 个字节, 通过IDA 中发现, 函数的前14个字节是：
+
+1
+2
+3
+
+|
+48 89 5C 24 08
+48 89 6C 24 10
+48 89 74 24
+
+|
+
+但这样的话，会导致第三行后面的 18 被截断，从而导致 mov [rsp+arg_10], rsi 指令不完整;
+
+所以，我们这里需要备份15个字节,
+
+使用 memcpy 方法进行备份, 这样写：
+
+1
+2
+3
+4
+5
+6
+
+|
+size_t back_size = 15 ;
+char *orig_func = new char [ 128 ]; // 大小, 不能 小于 JMPSIZE + back_size, 但可以大
+
+ProtectMemory (orig_func, buff_size, PAGE_EXECUTE_READWRITE); // 分配内存写入权限
+memcpy (orig_func, func_addr, back_size); // 备份原函数
+
+|
+
+#### 设置跳转指令 / 复制原函数
+
+使用 MakeAbsJMP 方法设置跳转指令
+
+第一参数是从哪里跳的地址
+第二个参数跳到哪里
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+|
+
+// 定义原始函数指针 在全局变量
+void *(*loadFile_step2)( void *, void *, int ) = nullptr ;
+
+.....
+
+// loadFile_step2_fun 为 我们自己的函数
+// 这里定义为 void *loadFile_step2_fun(void *a, wchar_t *b, int c)
+
+loadFile_step2 = ( void *(*)( void *, void *, int ))orig_func; // 强转类型
+MakeAbsJMP (func_addr, loadFile_step2_fun, true ); // 构造jmp在函数头部
+MakeAbsJMP (&orig_func[back_size], func_addr + back_size, true ); // 跳回原函数地址
+
+|
+
+#### 创建hook函数
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+|
+void * loadFile_step2_fun ( void *a, wchar_t *b, int c)
+{
+// 在这里做点什么
+// ....
+
+// 最后再调用原函数返回
+return loadFile_step2 (a, b, c);
+}
+
+|
+
+#### 完整示例
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+
+|
+
+# define JMPSIZE 14
+
+// 原始函数指针
+void *(*loadFile_step2)( void *, void *, int ) = nullptr ;
+
+// 代理函数
+void * loadFile_step2_fun ( void *a, wchar_t *b, int c)
+{
+// 我封装的日志输出
+std::string path = "....." ;
+UINT64 hash = "...." ;
+Logger:: info ( "loadFile" , "hash: %i , path: %s" , hash, path. c_str ());
+
+return loadFile_step2 (a, b, c); // 返回原内容
+}
+
+inline injector::memory_pointer_raw MakeAbsJMP (injector::memory_pointer_tr at, injector::memory_pointer_raw dest, bool vp = true )
+{
+injector:: WriteMemory < uint16_t >(at, 0x25FF , vp);
+injector:: WriteMemory < uint32_t >(at + sizeof ( uint16_t ), 0 , vp);
+injector:: WriteMemory < uint64_t >(at + sizeof ( uint16_t ) + sizeof ( uint32_t ), dest. as_int (), vp);
+return at. as_int () + JMPSIZE;
+}
+
+void hook ()
+{
+auto pattern = hook:: pattern ( "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B F1 44 89 41 08" );
+if (!pattern. count_hint ( 1 ). empty ())
+{
+char *orig_func = new char [ 30 ];
+
+auto func_addr = pattern. get_first ( 0 ); // func_addr 是 loadFile_step2 的地址,
+
+ProtectMemory (orig_func, 30 , PAGE_EXECUTE_READWRITE);
+
+memcpy (orig_func, func_addr, JMPSIZE + 1 );
+
+loadFile_step2 = ( void *(*)( void *, void *, int ))orig_func;
+
+MakeAbsJMP (&orig_func[ 15 ], func_addr + 15 , true );
+
+MakeAbsJMP (func_addr, loadFile_step2_fun, true );
+
+}
+}
+
+|
+
+### 封装hook
+
+接下来，我们来对hook进行简单的封装，以方便后续的调用:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+
+|
+// XMHook.hpp
+# pragma once
+# include "dllmain.hpp"
+
+# define JMPSIZE 14
+
+using namespace injector;
+using namespace std;
+using namespace reframework;
+
+namespace XMHook
+{
+class Hook
+{
+public :
+LPVOID original;
+Hook () {}
+~ Hook () {}
+
+injector::memory_pointer_raw MakeAbsJMP (injector::memory_pointer_tr at, injector::memory_pointer_raw dest, bool vp = true )
+{
+injector:: WriteMemory < uint16_t >(at, 0x25FF , vp);
+injector:: WriteMemory < uint32_t >(at + sizeof ( uint16_t ), 0 , vp);
+injector:: WriteMemory < uint64_t >(at + sizeof ( uint16_t ) + sizeof ( uint32_t ), dest. as_int (), vp);
+return at. as_int () + JMPSIZE;
+}
+
+void HookByPattern (
+std::string_view hax_text,
+LPVOID loadFile_step2_fun,
+size_t buff_size = 128 ,
+size_t back_size = JMPSIZE)
+{
+hook::pattern pattern = hook:: pattern (hax_text);
+if (!pattern. count_hint ( 1 ). empty ())
+{
+try
+{
+char *orig_func = new char [buff_size];
+auto func_addr = pattern. get_first ( 0 );
+
+ProtectMemory (orig_func, buff_size, PAGE_EXECUTE_READWRITE); // 分配写入权限
+memcpy (orig_func, func_addr, back_size); // 备份原函数
+original = (LPVOID)orig_func; // 赋值原始函数指针
+MakeAbsJMP (&orig_func[back_size], func_addr + back_size, true ); // 跳回原函数
+MakeAbsJMP (func_addr, loadFile_step2_fun, true ); // 构造jmp在函数头部
+Logger:: info ( "ModLoader" , " %s XMHook 成功" , hax_text. data ());
+}
+catch ( const std::exception &e)
+{
+Logger:: info ( "ModLoader" , " %s XMHook 失败:: %s" , hax_text. data (), e. what ());
+}
+}
+else
+{
+Logger:: info ( "ModLoader" , " %s XMHook 失败" , hax_text. data ());
+}
+}
+};
+}
+
+|
+
+#### 调用
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+
+|
+
+/**
+.....
+一些代理函数
+*/
+
+void hook ()
+{
+// hook loadFile_step2
+auto loadFile_step2_hook = new XMHook:: Hook ();
+loadFile_step2_hook-> HookByPattern (
+"48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B F1 44 89 41 08" ,
+(LPVOID)loadFile_step2_fun, 30 , 15 );
+loadFile_step2 = ( void *(*)( void *, void *, int ))loadFile_step2_hook->original;
+
+// hook PathToHash
+auto PathToHash_hook = new XMHook:: Hook ();
+PathToHash_hook-> HookByPattern (
+"40 55 53 41 56 48 8D AC 24 C0 F0 FF FF" ,
+(LPVOID)PathToHash_fun, 32 , 18 );
+PathToHash = ( UINT64 (*)( wchar_t *))PathToHash_hook->original;
+
+// hook CheckFileInPak
+auto CheckFileInPak_hook = new XMHook:: Hook ();
+CheckFileInPak_hook-> HookByPattern (
+"41 56 41 57 48 83 EC 28 48 83 B9 A8 00 00 00 00" ,
+(LPVOID)CheckFileInPak_fun, 30 , 16 );
+CheckFileInPak = ( int (*)( void *, UINT64))CheckFileInPak_hook->original;
+}
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+C++ , Hook , 游戏
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

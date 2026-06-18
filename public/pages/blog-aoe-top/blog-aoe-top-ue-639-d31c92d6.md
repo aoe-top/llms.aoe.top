@@ -1,0 +1,548 @@
+# 【UE5】多人游戏适配 | 小莫的博客园
+
+Source: https://blog.aoe.top/UE/639
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:27:00.896Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 介绍在多人游戏会话中，游戏状态信息将通过互联网连接在多台机器之间通信，而非单独驻留于一台计算机上。玩家之间的信息共享十分微妙，并会增加部分额外步骤，因此此操作导致多人游戏编程比单人游戏编辑复杂。虚幻引擎 提供的网络框架非常强大，支持部分世界上最流行的网络游戏，可简化此流程。本页对驱动多人游戏编程的概念和可使用的网络游戏构建工具进行了概述。 尽早规划多人游戏若项目可能需要多人游戏功能，则从项目开始阶
+
+## Content
+
+# 【UE5】多人游戏适配
+
+- 2024-03-04
+
+- 作者 小莫
+
+- 1. 介绍
+- 2. 尽早规划多人游戏
+- 3. 多人游戏需要注意的地方 3.1. 使用RepNotify复制玩家的属性
+- 3.2. 服务端运行方法
+
+### 介绍
+
+在多人游戏会话中，游戏状态信息将通过互联网连接在多台机器之间通信，而非单独驻留于一台计算机上。玩家之间的信息共享十分微妙，并会增加部分额外步骤，因此此操作导致多人游戏编程比单人游戏编辑复杂。虚幻引擎 提供的网络框架非常强大，支持部分世界上最流行的网络游戏，可简化此流程。本页对驱动多人游戏编程的概念和可使用的网络游戏构建工具进行了概述。
+
+### 尽早规划多人游戏
+
+若项目可能需要多人游戏功能，则从项目开始阶段起，构建所有gameplay时都应将多人游戏功能考虑在内。若开发团队通常会在创建多人游戏时实施额外步骤，相较于单人游戏，构建gameplay的流程并不会耗时过久。长远来看，项目将便于整个团队进行调试和维护。同时，虚幻引擎中编写的多人游戏gameplay仍可在单人游戏中使用。
+
+但是，重构无网络情况下编译的基本代码需要梳理整个项目，几乎所有gameplay都需要重新编写。届时，开发团队成员需重新学习可能早已熟悉的编程实操。同时，网速和稳定的相关技术瓶颈也会让你措手不及。
+
+相较于初期规划，在项目后期引入网络功能会占用大量资源，且极为复杂。因此，除非确定项目无需多人游戏功能，否则应 始终 按多人游戏方向进行编程。
+
+### 多人游戏需要注意的地方
+
+##### 使用RepNotify复制玩家的属性
+
+需要使用 RepNotify 来将一些需要交互的属性进行复制，比如说玩家的生命值、体力 等
+
+声明方法为：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+|
+...
+// *.h
+protected :
+/** 属性复制 */
+void GetLifetimeReplicatedProps (TArray<FLifetimeProperty> &OutLifetimeProps) const override ;
+
+/** 玩家的最大生命值。这是玩家的最高生命值，也是出生时的生命值。*/
+UPROPERTY (EditDefaultsOnly, Category = "Gameplay" )
+float MaxHealth;
+/** 玩家的当前生命值。降到0就表示死亡。*/
+UPROPERTY (ReplicatedUsing = OnRep_CurrentHealth)
+float CurrentHealth;
+
+/** 玩家的最体力值。这是玩家的最高体力，也是出生时的体力。*/
+UPROPERTY (EditDefaultsOnly, Category = "Gameplay" )
+float MaxStamina;
+/** 玩家的当前体力值。降到0就表示体力耗尽。*/
+UPROPERTY (ReplicatedUsing = OnRep_CurrentStamina)
+float CurrentStamina;
+
+/** RepNotify，用于同步对当前生命值所做的更改。*/
+UFUNCTION ()
+void OnRep_CurrentHealth () ;
+/** 响应要更新的生命值。修改后，立即在服务器上调用，并在客户端上调用以响应RepNotify*/
+void OnHealthUpdate () ;
+/** RepNotify，用于同步对当前体力值所做的更改。*/
+
+/** RepNotify，用于同步对当前体力值所做的更改。*/
+UFUNCTION ()
+void OnRep_CurrentStamina () ;
+/** 响应要更新的体力值。修改后，立即在服务器上调用，并在客户端上调用以响应RepNotify*/
+void OnStaminaUpdate () ;
+...
+
+|
+
+然后在 cpp 文件中实现他们
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+
+|
+// *.cpp
+/////////////////////////////服务器端的代码/////////////////////////////
+// 复制的属性
+
+void ARoguelikeCharacter::GetLifetimeReplicatedProps (TArray<FLifetimeProperty> &OutLifetimeProps) const
+{
+Super:: GetLifetimeReplicatedProps (OutLifetimeProps);
+
+// 复制当前生命值。
+DOREPLIFETIME (ARoguelikeCharacter, CurrentHealth);
+// 复制当前体力值
+DOREPLIFETIME (ARoguelikeCharacter, CurrentStamina);
+}
+
+void ARoguelikeCharacter::OnHealthUpdate ()
+{
+// 客户端特定的功能
+if ( IsLocallyControlled ())
+{
+// 在这里执行客户端要做的事情
+}
+
+// 服务器特定的功能
+if ( GetLocalRole () == ROLE_Authority)
+{
+// 在这里执行服务端要做的事情
+}
+
+// 在所有机器上都执行的函数。
+
+// 播放被攻击动画
+MulticastPlayMontage (BeAttackedAnimation, 1.f );
+
+if (CurrentHealth <= 0 )
+{
+bIsDead = true ;
+// 播放死亡动画
+MulticastPlayMontage (DeathAnimation, 1.f );
+
+// 显示胜利界面
+if (VictoryWidgetClass)
+{
+UUserWidget *VictoryWidget = CreateWidget <UUserWidget>( GetWorld (), VictoryWidgetClass);
+if (VictoryWidget)
+{
+VictoryWidget-> AddToViewport ();
+}
+}
+}
+}
+
+void ARoguelikeCharacter::OnStaminaUpdate ()
+{
+// 客户端特定的功能
+if ( IsLocallyControlled ())
+{
+// 在这里执行客户端要做的事情
+}
+
+// 服务器特定的功能
+if ( GetLocalRole () == ROLE_Authority)
+{
+// 在这里执行服务端要做的事情
+}
+}
+
+void ARoguelikeCharacter::OnRep_CurrentHealth ()
+{
+OnHealthUpdate ();
+}
+
+void ARoguelikeCharacter::OnRep_CurrentStamina ()
+{
+OnStaminaUpdate ();
+}
+
+void ARoguelikeCharacter::SetCurrentHealth ( float healthValue)
+{
+if ( GetLocalRole () == ROLE_Authority)
+{
+CurrentHealth = FMath:: Clamp (healthValue, 0.f , MaxHealth);
+OnHealthUpdate ();
+}
+}
+
+float ARoguelikeCharacter::TakeDamage ( float DamageTaken, struct FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+float damageApplied = CurrentHealth - DamageTaken;
+SetCurrentHealth (damageApplied);
+return damageApplied;
+}
+
+|
+
+##### 服务端运行方法
+
+在多人游戏下，所有客户端显示的内容，都是由服务端进行发送的，包括 动作、发射物 等，所以我们需要将大部分的操作都放到服务端进行执行
+
+我们需要这样做：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+|
+// *.h
+public :
+// 攻击
+UFUNCTION (Server, Reliable)
+void HandleAttack () ;
+
+// 防御
+UFUNCTION (Server, Reliable)
+void HandleDefend () ;
+
+|
+
+然后在 cpp 文件中实现
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+
+|
+// 攻击
+void ARoguelikeCharacter::Attack ( const FInputActionValue &Value)
+{
+HandleAttack ();
+}
+
+void ARoguelikeCharacter::HandleAttack_Implementation ()
+{
+if (CurrentStamina <= 10.0f )
+{
+// 体力不足，无法攻击
+return ;
+}
+
+// 获取角色的动画实例
+UAnimInstance *AnimInstance = GetMesh ()-> GetAnimInstance ();
+if (AnimInstance && AttackAnimation)
+{
+RotateCharacterToMouse ();
+// 检查是否已经有一个攻击动画正在播放
+if (!AnimInstance-> Montage_IsPlaying (AttackAnimation))
+{
+// 如果没有，就播放攻击动画蒙太奇
+// AnimInstance->Montage_Play(AttackAnimation, 1.f);
+MulticastPlayMontage (AttackAnimation, 1.f );
+
+// 减少体力
+CurrentStamina -= 10.0f ;
+
+// 生成一个投射物
+// 获取角色和摄像机的旋转
+FRotator actorRotation = GetActorRotation ();
+FRotator cameraRotation = GetControlRotation ();
+
+// 在角色前方生成一个投射物 朝向为角色的摄像机朝向
+FVector spawnLocation = GetActorLocation () + ( GetActorForwardVector () * 100.0f );
+FRotator spawnRotation = GetActorRotation ();
+
+spawnRotation.Pitch = cameraRotation.Pitch;
+spawnRotation.Yaw = actorRotation.Yaw;
+spawnRotation.Roll = actorRotation.Roll;
+
+FActorSpawnParameters spawnParameters;
+spawnParameters.Instigator = GetInstigator ();
+spawnParameters.Owner = this ;
+
+AThirdPersonMPProjectile *spawnedProjectile = GetWorld ()-> SpawnActor <AThirdPersonMPProjectile>(ProjectileClass, spawnLocation, spawnRotation, spawnParameters);
+}
+}
+}
+
+// 防御
+void ARoguelikeCharacter::Defend ( const FInputActionValue &Value)
+{
+
+HandleDefend ();
+}
+
+void ARoguelikeCharacter::HandleDefend_Implementation ()
+{
+
+if (CurrentStamina <= 5.0f )
+{
+// 体力不足，无法防御
+return ;
+}
+
+// 获取角色的动画实例
+UAnimInstance *AnimInstance = GetMesh ()-> GetAnimInstance ();
+if (AnimInstance && DefendAnimation)
+{
+RotateCharacterToMouse ();
+
+// 检查是否已经有一个防御动画正在播放
+if (!AnimInstance-> Montage_IsPlaying (DefendAnimation))
+{
+// 如果没有，就播放防御动画蒙太奇
+// AnimInstance->Montage_Play(DefendAnimation, 1.f);
+MulticastPlayMontage (DefendAnimation, 1.f );
+
+// 减少体力
+CurrentStamina -= 5.0f ;
+
+// 在角色前方生成一个防御物体
+FVector spawnLocation = GetActorLocation () + ( GetActorForwardVector () * 100.0f );
+FRotator spawnRotation = GetActorRotation ();
+
+FActorSpawnParameters spawnParameters;
+spawnParameters.Instigator = GetInstigator ();
+spawnParameters.Owner = this ;
+
+ADefendActor *spawnedDefend = GetWorld ()-> SpawnActor <ADefendActor>(DefendClass, spawnLocation, spawnRotation, spawnParameters);
+}
+}
+}
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+UE5 , 多人游戏 , 服务端
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

@@ -1,0 +1,175 @@
+# VS code + c++ 使用 CMake 编译 dll | 小莫的博客园
+
+Source: https://blog.aoe.top/c/629
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:26:57.433Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 介绍最近在研究Hook 注入相关的知识. 需要用到C++ 来编写代码,本来想直接用 vs 来写的, 但看到其他大佬都直接用vs code .我就试了一下, 发现vs code 写起来比vs 要轻便很多.再加上我用习惯了vs code 的流畅之后, 发现 VS 是真的卡.于是我决定顺便写一篇记录使用 VS code 来编写C++ 的文章. 完整的 CMake 教程可以到我的wiki库查看: http
+
+## Content
+
+# VS code + c++ 使用 CMake 编译 dll
+
+- 2023-07-13
+
+- 作者 小莫
+
+- 1. 介绍
+- 2. 前置插件
+- 3. 初始化项目
+- 4. 修改项目结构
+- 5. 生成DLL
+
+### 介绍
+
+最近在研究Hook 注入相关的知识. 需要用到C++ 来编写代码,
+本来想直接用 vs 来写的, 但看到其他大佬都直接用vs code .
+我就试了一下, 发现vs code 写起来比vs 要轻便很多.
+再加上我用习惯了vs code 的流畅之后, 发现 VS 是真的卡.
+于是我决定顺便写一篇记录使用 VS code 来编写C++ 的文章.
+
+完整的 CMake 教程可以到我的wiki库查看: https://wiki.aoe.top/CMake/README.html
+
+### 前置插件
+
+- vscode
+
+- C/C++
+
+- C/C++ Themes
+
+- C/C++ Extension Pack
+
+- CMake Language Support
+
+- CMake
+
+- CMake Tools
+
+### 初始化项目
+
+- 新建一个空的文件夹, 使用 vs code 打开.
+
+- 按 Ctrl+shift+p 打开vscode的执行面板.
+
+- 输入 CMake: Quick Start 初始化项目.
+
+- 初始化后会自动帮助你创建 CMakeLists.txt 和 RE4Hook.cpp 文件 (RE4Hook 是你输入的项目名称)
+
+### 修改项目结构
+
+默认创建的 项目结构不太适合大型项目的开发, 我们需要对其进行简单的改造:
+
+- 新建 src 目录
+
+- 将 RE4Hook.cpp 文件移动到 src 目录中;
+
+- 修改 CMakeLists.txt 文件的内容为:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+
+|
+# CMakeLists
+
+# CMake 最低版本号要求
+cmake_minimum_required (VERSION 3.26 . 1 )
+
+# 项目信息
+project (RE4Hook VERSION 1.0 . 0 LANGUAGES C CXX)
+
+# 指定为C++17 版本
+set (CMAKE_CXX_STANDARD 17 )
+
+include (CTest)
+enable_testing ()
+
+# 查找目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory (src/ DIR_SRCS)
+
+# 引入 include 目录
+include_directories ( ${CMAKE_SOURCE_DIR} / include )
+
+# 指定生成目标 第一个参数为你需要构建的dll的名字，第二个为类型
+add_library (RE4Hook SHARED ${DIR_SRCS} )
+
+# add_library(${PROJECT_NAME} )
+set (CPACK_PROJECT_NAME ${PROJECT_NAME} )
+set (CPACK_PROJECT_VERSION ${PROJECT_VERSION} )
+include (CPack)
+
+# 配置导出目录
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY out)
+
+# 为dll设置linker
+# 指定dll的生成目录，这里是：./out
+SET_TARGET_PROPERTIES ( ${CPACK_PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C
+RUNTIME_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+OUTPUT_NAME ${CPACK_PROJECT_NAME}
+PREFIX "" )
+
+|
+
+### 生成DLL
+
+点击左下角的 Build 按钮, 即可开始生成
+
+生成的结果在 /build/out 目录里面
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+CMake , VS code , c++ , dll
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

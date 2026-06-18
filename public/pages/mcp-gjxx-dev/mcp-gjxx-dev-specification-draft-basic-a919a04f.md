@@ -1,0 +1,205 @@
+# 概述 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/draft/basic
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:27.459Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 消息 请求
+- 响应
+- 通知
+- 认证
+- 模式 通用字段
+- _meta
+- icons
+
+基础协议
+
+# 概述
+
+Copy page
+
+Copy page
+
+协议修订 : draft
+
+Model Context Protocol由几个协同工作的关键组件组成：
+
+- 基础协议 ：核心JSON-RPC消息类型
+
+- 生命周期管理 ：连接初始化、功能协商和会话控制
+
+- 授权 ：HTTP传输的认证和授权框架
+
+- 服务器功能 ：服务器公开的资源、提示和工具
+
+- 客户端功能 ：客户端提供的采样和根目录列表
+
+- 工具 ：跨领域关注点，如日志记录和参数补全
+
+所有实现 必须 支持基础协议和生命周期管理组件。其他组件 可以 根据应用程序的具体需求实现。
+这些协议层建立了清晰的关注点分离，同时实现客户端和服务器之间的丰富交互。模块化设计允许实现仅支持它们需要的功能。
+
+## ​ 消息
+
+MCP客户端和服务器之间的所有消息 必须 遵循 JSON-RPC 2.0 规范。该协议定义了这些类型的消息：
+
+### ​ 请求
+
+请求从客户端发送到服务器或反之，用于发起操作。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 请求 必须 包含字符串或整数ID。
+
+- 与基础JSON-RPC不同，ID 不能 为 null 。
+
+- 请求ID 不能 在同一会话中被请求者之前使用过。
+
+### ​ 响应
+
+响应发送以回复请求，包含操作的结果或错误。
+
+{
+jsonrpc : "2.0" ;
+id : string | number ;
+result ?: {
+[key: string]: unknown ;
+}
+error ?: {
+code: number ;
+message : string ;
+data ?: unknown ;
+}
+}
+
+- 响应 必须 包含与其对应的请求相同的ID。
+
+- 响应 进一步分为 成功结果 或 错误 。 必须 设置 result 或 error 之一。响应 不能 同时设置两者。
+
+- 结果 可以 遵循任何JSON对象结构，而错误 必须 至少包含错误代码和消息。
+
+- 错误代码 必须 是整数。
+
+### ​ 通知
+
+通知从客户端发送到服务器或反之，作为单向消息。接收者 不能 发送响应。
+
+{
+jsonrpc : "2.0" ;
+method : string ;
+params ?: {
+[key: string]: unknown ;
+};
+}
+
+- 通知 不能 包含ID。
+
+## ​ 认证
+
+MCP为HTTP使用提供了 授权 框架。使用基于HTTP的传输的实现 应该 符合此规范，而使用STDIO传输的实现 不应该 遵循此规范，而是从环境中检索凭据。
+此外，客户端和服务器 可以 协商自己的自定义认证和授权策略。
+有关MCP认证机制演进的进一步讨论和贡献，请加入我们在 GitHub Discussions 中，帮助塑造协议的未来！
+
+## ​ 模式
+
+协议的完整规范定义为 TypeScript模式 。这是所有协议消息和结构的事实来源。
+还有一个 JSON Schema ，它是从TypeScript事实来源自动生成的，用于各种自动化工具。
+
+### ​ 通用字段
+
+#### ​ _meta
+
+_meta 属性/参数由MCP保留，以允许客户端和服务器为其交互附加额外元数据。
+某些键名由MCP保留用于协议级元数据，如下所述；实现不能对这些键的值做出假设。
+此外， 模式 中的定义可能会为特定目的的元数据保留特定名称，如这些定义中声明的那样。
+键名格式： 有效的 _meta 键名有两个段：可选的 前缀 和 名称 。
+前缀：
+
+- 如果指定， 必须 是一系列用点(.)分隔的标签，后跟斜杠(/)。 标签 必须 以字母开头，以字母或数字结尾；内部字符可以是字母、数字或连字符(-)。
+
+- 以零个或多个有效标签开头，后跟 modelcontextprotocol 或 mcp ，后跟任何有效标签的前缀 保留 供MCP使用。 例如： modelcontextprotocol.io/ 、 mcp.dev/ 、 api.modelcontextprotocol.org/ 和 tools.mcp.com/ 都保留。
+
+名称：
+
+- 除非为空， 必须 以字母数字字符( [a-z0-9A-Z] )开头和结尾。
+
+- 可以 在中间包含连字符(-)、下划线(_)、点(.)和字母数字。
+
+#### ​ icons
+
+icons 属性为服务器公开其资源、工具、提示和实现的视觉标识符提供了一种标准化方式。图标通过提供视觉上下文和改善可用功能的发现性来增强用户界面。
+图标表示为 Icon 对象的数组，其中每个图标包括：
+
+- src ：指向图标资源的URI（必需）。这可以是： 指向图像文件的HTTP/HTTPS URL
+
+- 带有base64编码图像数据的data URI
+
+- mimeType ：如果服务器类型缺失或通用，则可选的MIME类型
+
+- sizes ：可选的大小规格数组（例如， ["48x48"] 、 ["any"] 用于可缩放格式如SVG，或 ["48x48", "96x96"] 用于多个大小）
+
+必需的MIME类型支持：
+支持渲染图标的客户端 必须 至少支持以下MIME类型：
+
+- image/png - PNG图像（安全、通用兼容性）
+
+- image/jpeg （和 image/jpg ）- JPEG图像（安全、通用兼容性）
+
+支持渲染图标的客户端 应该 也支持：
+
+- image/svg+xml - SVG图像（可缩放但需要安全预防措施，如下所述）
+
+- image/webp - WebP图像（现代、高效格式）
+
+安全考虑：
+图标元数据的消费者 必须 在处理图标时采取适当的安全预防措施以防止妥协：
+
+- 将图标元数据和图标字节视为不受信任的输入，并防御网络、隐私和解析风险。
+
+- 确保图标URI是HTTPS或 data: URI。客户端 必须 拒绝使用不安全方案和重定向的图标URI，如 javascript: 、 file: 、 ftp: 、 ws: 或本地应用URI方案。 禁止方案更改和重定向到不同来源的主机。
+
+- 对来自超大图像、大尺寸或过多帧（例如，在GIF中）的资源耗尽攻击具有弹性。 消费者 可以 设置图像和内容大小的限制。
+
+- 无凭据获取图标。不发送cookie、 Authorization 标头或客户端凭据。
+
+- 验证图标URI来自与服务器相同的来源。这最小化了向第三方暴露数据或跟踪信息的风险。
+
+- 在获取和渲染图标时要小心，因为有效载荷 可能 包含可执行内容（例如，带有 嵌入式JavaScript 的SVG或 扩展功能 ）。 消费者 可以 选择禁止特定文件类型或在渲染前以其他方式清理图标文件。
+
+- 在渲染前验证MIME类型和文件内容。将MIME类型信息视为建议。通过魔数检测内容类型；不匹配或未知类型时拒绝。 维护严格的图像类型允许列表。
+
+用法：
+图标可以附加到：
+
+- Implementation ：MCP服务器/客户端实现的视觉标识符
+
+- Tool ：工具功能的视觉表示
+
+- Prompt ：在提示模板旁边显示的图标
+
+- Resource ：不同资源类型的视觉指示器
+
+可以提供多个图标以支持不同的显示上下文和分辨率。客户端应根据其UI要求选择最合适的图标。
+
+架构 生命周期
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

@@ -1,0 +1,101 @@
+# Cancellation - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2025-03-26/basic/utilities/cancellation
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:28:58.117Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 取消流程
+- 行为要求
+- 时间考虑
+- 实现说明
+- 错误处理
+
+实用工具
+
+# Cancellation
+
+Copy page
+
+Copy page
+
+协议修订 : 2025-03-26
+
+Model Context Protocol (MCP) 通过通知消息支持正在进行的请求的可选取消。任何一方都可以发送取消通知以指示先前发出的请求应该被终止。
+
+## ​ 取消流程
+
+当一方想要取消正在进行的请求时，它发送包含以下内容的 notifications/cancelled 通知：
+
+- 要取消的请求的ID
+
+- 可选的原因字符串，可以被记录或显示
+
+{
+"jsonrpc" : "2.0" ,
+"method" : "notifications/cancelled" ,
+"params" : {
+"requestId" : "123" ,
+"reason" : "User requested cancellation"
+}
+}
+
+## ​ 行为要求
+
+- 取消通知 必须 仅引用： 在同一方向上先前发出的请求
+
+- 被认为仍在进行的请求
+
+- 客户端 不能 取消 initialize 请求
+
+- 取消通知的接收者 应该 ： 停止处理已取消的请求
+
+- 释放关联的资源
+
+- 不为已取消的请求发送响应
+
+- 接收者 可以 忽略取消通知，如果： 引用的请求未知
+
+- 处理已完成
+
+- 请求无法取消
+
+- 取消通知的发送者 应该 忽略随后到达的对请求的任何响应
+
+## ​ 时间考虑
+
+由于网络延迟，取消通知可能在请求处理完成后到达，并且可能在响应已被发送后到达。
+双方 必须 优雅地处理这些竞争条件：
+
+## ​ 实现说明
+
+- 双方 应该 记录取消原因以进行调试
+
+- 应用程序UI 应该 指示何时请求取消
+
+## ​ 错误处理
+
+无效的取消通知 应该 被忽略：
+
+- 未知的请求ID
+
+- 已完成的请求
+
+- 格式错误的通知
+
+这保持了通知的”发出即忘”性质，同时允许异步通信中的竞争条件。
+
+授权 Ping
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

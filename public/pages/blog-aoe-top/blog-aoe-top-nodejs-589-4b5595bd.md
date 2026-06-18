@@ -1,0 +1,441 @@
+# 【Electron】前后端通讯 夸线程通讯 ipcMain 与 ipcRenderer | 小莫的博客园
+
+Source: https://blog.aoe.top/NodeJS/589
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:08.263Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 折腾了半天，终于搞明白Electron的前后端通讯了。为了防止自己忘记，进行整理一下。 无需接收参数如果不需要接收回调参数的话，可以使用 ipcMain.on(channel, listener) 和 ipcRenderer.send(channel, ...args) 组合 如： 123456789101112// main.js// 窗口最小化ipcMain.on('window-m
+
+## Content
+
+# 【Electron】前后端通讯 夸线程通讯 ipcMain 与 ipcRenderer
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 无需接收参数
+- 2. 需要接收参数
+- 3. ipcMain （后端监听） 3.1. 方法 3.1.1. ipcMain.on(channel, listener)
+- 3.1.2. ipcMain.once(channel, listener)
+- 3.1.3. ipcMain.removeListener(channel, listener)
+- 3.1.4. ipcMain.removeAllListeners([channel])
+- 3.1.5. ipcMain.handle(channel, listener)
+- 3.1.6. ipcMain.handleOnce(channel, listener)
+- 3.1.7. ipcMain.removeHandler(channel)
+- 4. ipcRenderer （前端发送请求） 4.1. 方法 4.1.1. ipcRenderer.on(channel, listener)
+- 4.1.2. ipcRenderer.once(channel, listener)
+- 4.1.3. ipcRenderer.removeListener(channel, listener)
+- 4.1.4. ipcRenderer.removeAllListeners(channel)
+- 4.1.5. ipcRenderer.send(channel, …args)
+- 4.1.6. ipcRenderer.invoke(channel, …args)
+- 4.1.7. ipcRenderer.sendSync(channel, …args)
+- 4.1.8. ipcRenderer.postMessage(channel, message, [transfer])
+- 4.1.9. ipcRenderer.sendTo(webContentsId, channel, …args)
+- 4.1.10. ipcRenderer.sendToHost(channel, …args)
+
+折腾了半天，终于搞明白Electron的前后端通讯了。
+为了防止自己忘记，进行整理一下。
+
+## 无需接收参数
+
+如果不需要接收回调参数的话，可以使用 ipcMain.on(channel, listener) 和 ipcRenderer.send(channel, ...args) 组合
+
+如：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+|
+// main.js
+// 窗口最小化
+ipcMain. on ( 'window-min' , function ( ) {
+if (win) {
+win. minimize ();
+}
+})
+
+// 前端调用
+function handleMinimize ( ) {
+ipcRenderer. send ( 'window-min' )
+}
+
+|
+
+## 需要接收参数
+
+如果需要接收后端返回的参数，可以使用 ipcMain.handle(channel, listener) 和
+ipcRenderer.invoke(channel, ...args) 组合
+
+如：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+|
+// main.js
+// 选择文件夹
+ipcMain. handle ( 'select-folder' , ( event, arg ) => {
+const { dialog } = require ( 'electron' );
+let path = dialog. showOpenDialogSync ({ title : "选择下载保存目录" , properties : [ 'openDirectory' , 'showHiddenFiles' ] })
+return path
+})
+
+// 前端调用
+function select_folder ( ) {
+// 打开文件夹选择器
+ipcRenderer. invoke ( "select-folder" ). then ( ( result ) => {
+console . log ( "返回的参数:" , result);
+})
+}
+
+|
+
+下面是官方的一些方法合集
+
+## ipcMain （后端监听）
+
+ipcMain 用于在主进程创建监听对象，
+官方文档： https://www.electronjs.org/zh/docs/latest/api/ipc-main
+
+### 方法
+
+#### ipcMain.on(channel, listener)
+
+监听 channel, 当新消息到达，将通过 listener(event, args…) 调用 listener
+
+- channel string
+
+- listener Function event IpcMainEvent
+
+- ...args any[]
+
+如：
+
+1
+2
+3
+
+|
+ipcMain. on ( 'main-test' , (event, arg) {
+console . log ( '这个是我接收到的参数：' ，arg);
+})
+
+|
+
+其中，event包含以下内容：
+
+- processId Integer - 发送该消息的渲染进程内部的ID
+
+- frameId Integer - 发送该消息的渲染进程框架的ID（可能是iframe）
+
+- returnValue any - 如果对此赋值，则该值会在同步消息中返回
+
+- sender 网络会议 - 返回发送消息的 webContents
+
+- senderFrame WebFrameMain 只读 - 发送此消息的框架
+
+- ports MessagePortMain[] - 一个用于存放传输消息端口号的数组。
+
+- reply Function - 将 IPC 消息发送到渲染器框架的函数，该渲染器框架发送当前正在处理的原始消息。 您应该使用“reply”方法回复发送的消息，以确保回复将转到正确的进程和框架。 channel string
+
+- ...args any[]
+
+#### ipcMain.once(channel, listener)
+
+添加一次性 listener 函数。 这个 listener 只会在 channel下一次收到消息的时候被调用，之后这个监听器会被移除。
+
+- channel string
+
+- listener Function event IpcMainEvent
+
+- ...args any[]
+
+#### ipcMain.removeListener(channel, listener)
+
+为特定的 channel 从监听队列中删除特定的 listener 监听者.
+
+- channel string
+
+- listener Function …args any[]
+
+#### ipcMain.removeAllListeners([channel])
+
+移除所有指定 channel 的监听器； 若未指定 channel，则移除所有监听器。
+
+- channel string (optional)
+
+#### ipcMain.handle(channel, listener)
+
+为一个 invokeable的IPC 添加一个handler。 每当一个渲染进程调用 ipcRenderer.invoke(channel, …args) 时这个处理器就会被调用。
+
+- channel string
+
+- listener Function | any> event IpcMainInvokeEvent
+
+- ...args any[]
+
+如果 listener 返回一个 Promise，那么 Promise 的最终结果就是远程调用的返回值。 否则， 监听器的返回值将被用来作为应答值。
+
+如：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+|
+// 主进程 main.js
+ipcMain. handle ( 'my-invokable-ipc' , async (event, ...args) => {
+const result = await somePromise (...args)
+return result
+})
+
+// 前端 preload.js
+const result = await ipcRenderer. invoke ( 'my-invokable-ipc' , arg1, arg2)
+console . log ( "返回的参数值：" ,result);
+
+|
+
+递给处理器的第一个参数的 event 与传递给常规事件侦听器的相同。 里面包含了哪些 WebContents 是调用请求的来源
+
+通过handle在主线程抛出的异常并不易读，那是因为他们已经被序列化了。只有原始错误中的 message 属性可提供给渲染进程。 详情请参阅 #24427
+
+#### ipcMain.handleOnce(channel, listener)
+
+处理单个 invokeable 可触发的 IPC 消息，然后移除侦听器。 详见 ipcMain.handle(channel, listener)
+
+- channel string
+
+- listener Function | any> event IpcMainInvokeEvent
+
+- ...args any[]
+
+#### ipcMain.removeHandler(channel)
+
+移除 channel的所有处理程序，若存在。
+
+- channel string
+
+## ipcRenderer （前端发送请求）
+
+ipcRenderer 是一个 EventEmitter 的实例。 你可以使用它提供的一些方法从渲染进程 (web 页面) 发送同步或异步的消息到主进程。 也可以接收主进程回复的消息。
+官方文档： https://www.electronjs.org/zh/docs/latest/api/ipc-renderer
+
+### 方法
+
+#### ipcRenderer.on(channel, listener)
+
+监听 channel, 当新消息到达，将通过 listener(event, args…) 调用 listener。
+
+- channel string
+
+- listener Function event IpcRendererEvent
+
+- ...args any[]
+
+可理解为用在渲染端的 ipcMain.on，用于跨线程通讯
+
+#### ipcRenderer.once(channel, listener)
+
+添加一次性 listener 函数。 这个 listener 只会在 channel下一次收到消息的时候被调用，之后这个监听器会被移除。
+
+- channel string
+
+- listener Function event IpcRendererEvent
+
+- ...args any[]
+
+#### ipcRenderer.removeListener(channel, listener)
+
+为特定的 channel 从监听队列中删除特定的 listener 监听者.
+
+- channel string
+
+- listener Function ...args any[]
+
+#### ipcRenderer.removeAllListeners(channel)
+
+移除所有的监听器，当指定 channel 时只移除与其相关的所有监听器。
+
+- channel string
+
+#### ipcRenderer.send(channel, …args)
+
+通过channel向主进程发送异步消息，可以发送任意参数。参数将使用 Structured Clone Algorithm进行序列化，就像 window.postMessage,因此原型链将不会包含在内。 发送 Functions, Promises, Symbols, WeakMaps, 或 WeakSets 将抛出异常
+
+注意： 发送非标准的 JavaScript 类型，如DOM 对象或特殊Electron 对象将会抛出异常。
+主线程不支持 DOM 对象比如 ImageBitmap, File, DOMMatrix 等对象， 它们无法通过Electron的IPC发送到主线程，主要原因是主线程无法对他们进行解码 若尝试通过IPC发送这种对象数据将返回异常
+
+主进程中，通过监听 ipcMain 模块下的 channel 来处理这些消息
+如果需要将一个 MessagePort 传输到主进程，请使用 ipcRenderer.postMessage。
+如果你想从主进程中收到单个响应，比如一个方法调用的结果， 请考虑使用 ipcRenderer.invoke
+
+#### ipcRenderer.invoke(channel, …args)
+
+Returns Promise<any> - Resolves 主进程返回值
+
+- channel string
+
+- ...args any[]
+
+通过 channel 向主过程发送消息，并异步等待结果。 参数将使用 Structured Clone Algorithm进行序列化，就像 window.postMessage,因此原型链将不会包含在内。 发送 Functions, Promises, Symbols, WeakMaps, 或 WeakSets 将抛出异常
+
+注意： 发送非标准的 JavaScript 类型，如DOM 对象或特殊Electron 对象将会抛出异常。
+主线程不支持 DOM 对象比如 ImageBitmap, File, DOMMatrix 等对象， 它们无法通过Electron的IPC发送到主线程，主要原因是主线程无法对他们进行解码 若尝试通过IPC发送这种对象数据将返回异常
+
+主进程应该使用 ipcMain.handle() 监听 channel
+
+如：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+|
+// 主进程 main.js
+ipcMain. handle ( 'some-name' , async (event, someArgument) => {
+const result = await doSomeWork (someArgument)
+return result
+})
+
+// 渲染进程
+ipcRenderer. invoke ( 'some-name' , someArgument). then ( ( result ) => {
+// ...
+console . log ( "这个是我收到的值：" ,result);
+})
+
+|
+
+如果需要将一个 MessagePort 传输到主进程，请使用 ipcRenderer.postMessage。
+
+如果不需要回调参数，请考虑使用 ipcRender.sent。
+
+#### ipcRenderer.sendSync(channel, …args)
+
+返回 any - 由 ipcMain 处理程序发送过来的值。
+
+- channel string
+
+- ...args any[]
+
+通过 channel 向主过程发送消息，并同步等待结果。 参数将使用 Structured Clone Algorithm进行序列化，就像 window.postMessage,因此原型链将不会包含在内。 发送 Functions, Promises, Symbols, WeakMaps, 或 WeakSets 将抛出异常
+
+注意： 发送非标准的 JavaScript 类型，如DOM 对象或特殊Electron 对象将会抛出异常。
+主线程不支持 DOM 对象比如 ImageBitmap, File, DOMMatrix 等对象， 它们无法通过Electron的IPC发送到主线程，主要原因是主线程无法对他们进行解码 若尝试通过IPC发送这种对象数据将返回异常
+
+主进程可以使用 ipcMain 监听 channel来接收这些消息，并通过 event.returnValue 设置回复消息。
+
+⚠️ 警告: 发送同步消息将阻止整个渲染过程直到收到回复。 这样使用此方法只能作为最后手段。 使用异步版本更好 invoke()
+
+#### ipcRenderer.postMessage(channel, message, [transfer])
+
+发送消息到主进程，同时可以选择性发送零到多个 MessagePort 对象
+
+- channel string
+
+- message any
+
+- transfer MessagePort[] (optional)
+
+从渲染进程发送到主进程的MessagePort对象可作为MessagePortMain对象访问触发事件的ports端口属性
+
+如：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+|
+// 渲染进程
+const { port1, port2 } = new MessageChannel ()
+ipcRenderer. postMessage ( 'port' , { message : 'hello' }, [port1])
+
+// 主进程
+ipcMain. on ( 'port' , ( e, msg ) => {
+const [port] = e. ports
+// ...
+})
+
+|
+
+更多关于如何使用 MessagePort 和 MessageChannel的信息详见 MDN documentation
+
+#### ipcRenderer.sendTo(webContentsId, channel, …args)
+
+通过 channel 发送消息到带有 webContentsId 的窗口.
+
+- webContentsId number
+
+- channel string
+
+- ...args any[]
+
+#### ipcRenderer.sendToHost(channel, …args)
+
+就像 ipcRenderer.send，不同的是消息会被发送到 host 页面上的 元素，而不是主进程。
+
+- channel string
+
+- ...args any[]
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+Electron , NodeJs , ipcMain , ipcRenderer , 前后端通讯
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

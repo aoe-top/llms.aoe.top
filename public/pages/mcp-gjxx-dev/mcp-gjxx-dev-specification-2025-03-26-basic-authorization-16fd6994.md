@@ -1,0 +1,325 @@
+# 授权 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2025-03-26/basic/authorization
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:28:54.406Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 介绍 目的和范围
+- 协议要求
+- 标准合规性
+- 授权流程 概述
+- OAuth授权类型
+- 示例：授权码授权
+- Server Metadata Discovery
+- 服务器元数据发现标头
+- 授权基础URL
+- 没有元数据发现的服务器的回退
+- Dynamic Client Registration
+- 授权流程步骤
+- Decision Flow Overview
+- 访问令牌使用
+- 令牌要求
+- 令牌处理
+- 安全考虑
+- 错误处理
+- 实现要求
+- 第三方授权流程
+- 概述
+- 流程描述
+- 会话绑定要求
+- 安全考虑
+- 最佳实践 本地客户端作为公共OAuth 2.1客户端
+- 授权元数据发现
+- 动态客户端注册
+
+基础协议
+
+# 授权
+
+Copy page
+
+Copy page
+
+协议修订 : 2025-03-26
+
+## ​ 介绍
+
+### ​ 目的和范围
+
+Model Context Protocol 在传输级别提供授权功能，使MCP客户端能够代表资源所有者向受限的MCP服务器发出请求。本规范定义了基于HTTP传输的授权流程。
+
+### ​ 协议要求
+
+授权对于MCP实现是 可选的 。当支持时：
+
+- 使用基于HTTP传输的实现 应该 符合此规范。
+
+- 使用STDIO传输的实现 不应该 遵循此规范，而是从环境中检索凭据。
+
+- 使用替代传输的实现 必须 遵循其协议的既定安全最佳实践。
+
+### ​ 标准合规性
+
+此授权机制基于下面列出的既定规范，但实现了其功能的选定子集，以确保安全性和互操作性，同时保持简单性：
+
+- OAuth 2.1 IETF DRAFT
+
+- OAuth 2.0 Authorization Server Metadata ( RFC8414 )
+
+- OAuth 2.0 Dynamic Client Registration Protocol ( RFC7591 )
+
+## ​ 授权流程
+
+### ​ 概述
+
+- MCP认证实现 必须 使用适当的安全措施为机密客户端和公共客户端实现OAuth 2.1。
+
+- MCP认证实现 应该 支持OAuth 2.0 Dynamic Client Registration Protocol ( RFC7591 )。
+
+- MCP服务器 应该 且MCP客户端 必须 实现OAuth 2.0 Authorization Server Metadata ( RFC8414 )。不支持Authorization Server Metadata的服务器 必须 遵循默认URI模式。
+
+### ​ OAuth授权类型
+
+OAuth指定了不同的流程或授权类型，这些是获取访问令牌的不同方式。每种都针对不同的用例和场景。
+MCP服务器 应该 支持最符合预期受众的OAuth授权类型。例如：
+
+- 授权码：当客户端代表（人类）最终用户行事时有用。 例如，代理调用由SaaS系统实现的MCP工具。
+
+- 客户端凭据：客户端是另一个应用程序（不是人类） 例如，代理调用安全的MCP工具来检查特定商店的库存。不需要模拟最终用户。
+
+### ​ 示例：授权码授权
+
+这演示了用于用户认证的授权码授权类型的OAuth 2.1流程。
+注意 ：以下示例假设MCP服务器也充当授权服务器。但是，授权服务器可以作为自己的独立服务部署。
+人类用户通过Web浏览器完成OAuth流程，获取识别他们个人身份并允许客户端代表他们行事的访问令牌。
+当需要授权但客户端尚未证明时，服务器 必须 以_HTTP 401 Unauthorized_响应。
+客户端在收到_HTTP 401 Unauthorized_后启动 OAuth 2.1 IETF DRAFT 授权流程。
+以下演示了使用PKCE的公共客户端的基本OAuth 2.1。
+
+### ​ Server Metadata Discovery
+
+For server capability discovery:
+
+- MCP clients MUST follow the OAuth 2.0 Authorization Server Metadata protocol defined in RFC8414 .
+
+- MCP server SHOULD follow the OAuth 2.0 Authorization Server Metadata protocol.
+
+- MCP servers that do not support the OAuth 2.0 Authorization Server Metadata protocol, MUST support fallback URLs.
+
+The discovery flow is illustrated below:
+
+#### ​ 服务器元数据发现标头
+
+MCP客户端_应该_在服务器元数据发现期间包含标头 MCP-Protocol-Version: <protocol-version> ，以允许MCP服务器根据MCP协议版本进行响应。
+例如： MCP-Protocol-Version: 2024-11-05
+
+#### ​ 授权基础URL
+
+授权基础URL 必须 通过丢弃MCP服务器URL中的任何现有 path 组件来确定。例如：
+如果MCP服务器URL是 https://api.example.com/v1/mcp ，那么：
+
+- 授权基础URL是 https://api.example.com
+
+- 元数据端点 必须 位于 https://api.example.com/.well-known/oauth-authorization-server
+
+这确保了授权端点始终位于托管MCP服务器的域的根级别，无论MCP服务器URL中的任何路径组件如何。
+
+#### ​ 没有元数据发现的服务器的回退
+
+对于未实现OAuth 2.0 Authorization Server Metadata的服务器，客户端 必须 使用相对于 授权基础URL 的以下默认端点路径：
+
+端点 | 默认路径 | 描述 |
+
+授权端点 | /authorize | 用于授权请求 |
+
+令牌端点 | /token | 用于令牌交换和刷新 |
+
+注册端点 | /register | 用于动态客户端注册 |
+
+例如，对于托管在 https://api.example.com/v1/mcp 的MCP服务器，默认端点将是：
+
+- https://api.example.com/authorize
+
+- https://api.example.com/token
+
+- https://api.example.com/register
+
+Clients MUST first attempt to discover endpoints via the metadata document before
+falling back to default paths. When using default paths, all other protocol requirements
+remain unchanged.
+
+### ​ Dynamic Client Registration
+
+MCP客户端和服务器 应该 支持 OAuth 2.0 Dynamic Client Registration Protocol ，以允许MCP客户端在没有用户交互的情况下获取OAuth客户端ID。这为客户端提供了一种标准化的方式来自动注册到新服务器，这对MCP至关重要，因为：
+
+- 客户端无法提前知道所有可能的服务器
+
+- 手动注册会给用户造成摩擦
+
+- 它实现了与新服务器的无缝连接
+
+- 服务器可以实现自己的注册策略
+
+任何_不支持_动态客户端注册的MCP服务器都需要提供获取客户端ID（以及适用的客户端密钥）的替代方式。对于这些服务器，MCP客户端将不得不：
+
+- 为该MCP服务器专门硬编码客户端ID（以及适用的客户端密钥），或
+
+- 呈现UI给用户，允许他们在自己注册OAuth客户端后输入这些详细信息（例如，通过服务器托管的配置界面）。
+
+### ​ 授权流程步骤
+
+完整的授权流程如下进行：
+
+#### ​ Decision Flow Overview
+
+### ​ 访问令牌使用
+
+#### ​ 令牌要求
+
+访问令牌处理 必须 符合 OAuth 2.1 Section 5 对资源请求的要求。具体来说：
+
+- MCP客户端 必须 使用Authorization请求头字段 Section 5.1.1 ：
+
+Authorization: Bearer <access-token>
+
+注意，授权 必须 包含在从客户端到服务器的每个HTTP请求中，即使它们是同一逻辑会话的一部分。
+
+- 访问令牌 不能 包含在URI查询字符串中
+
+示例请求：
+
+GET /v1/contexts HTTP / 1.1
+Host : mcp.example.com
+Authorization : Bearer eyJhbGciOiJIUzI1NiIs...
+
+#### ​ 令牌处理
+
+资源服务器 必须 按照以下描述验证访问令牌：
+Section 5.2 .
+If validation fails, servers MUST respond according to
+Section 5.3
+错误处理要求。无效或过期的令牌 必须 收到HTTP 401响应。
+
+### ​ 安全考虑
+
+以下安全要求 必须 实施：
+
+- 客户端 必须 按照OAuth 2.0最佳实践安全存储令牌
+
+- 服务器 应该 强制执行令牌过期和轮换
+
+- 所有授权端点 必须 通过HTTPS提供服务
+
+- 服务器 必须 验证重定向URI以防止开放重定向漏洞
+
+- 重定向URI 必须 是localhost URL或HTTPS URL
+
+### ​ 错误处理
+
+服务器 必须 为授权错误返回适当的HTTP状态码：
+
+状态码 | 描述 | 使用 |
+
+401 | 未授权 | 需要授权或令牌无效 |
+
+403 | 禁止 | 无效范围或权限不足 |
+
+400 | 错误请求 | 格式错误的授权请求 |
+
+### ​ 实现要求
+
+- 实现 必须 遵循OAuth 2.1安全最佳实践
+
+- PKCE对所有客户端是 必需的
+
+- 令牌轮换 应该 实施以增强安全性
+
+- 令牌生命周期 应该 根据安全要求进行限制
+
+### ​ 第三方授权流程
+
+#### ​ 概述
+
+MCP服务器 可以 通过第三方授权服务器支持委托授权。在此流程中，MCP服务器既充当OAuth客户端（对第三方认证服务器），又充当OAuth授权服务器（对MCP客户端）。
+
+#### ​ 流程描述
+
+第三方授权流程包括以下步骤：
+
+- MCP客户端使用MCP服务器启动标准OAuth流程
+
+- MCP服务器将用户重定向到第三方授权服务器
+
+- 用户在第三方服务器上授权
+
+- 第三方服务器使用授权码重定向回MCP服务器
+
+- MCP服务器交换代码以获取第三方访问令牌
+
+- MCP服务器生成绑定到第三方会话的自己的访问令牌
+
+- MCP服务器使用MCP客户端完成原始OAuth流程
+
+#### ​ 会话绑定要求
+
+实现第三方授权的MCP服务器 必须 ：
+
+- 维护第三方令牌和已发行MCP令牌之间的安全映射
+
+- 在兑现MCP令牌之前验证第三方令牌状态
+
+- 实施适当的令牌生命周期管理
+
+- 处理第三方令牌过期和续订
+
+#### ​ 安全考虑
+
+实施第三方授权时，服务器 必须 ：
+
+- 验证所有重定向URI
+
+- 安全存储第三方凭据
+
+- 实施适当的会话超时处理
+
+- 考虑令牌链接的安全影响
+
+- 为第三方认证失败实施适当的错误处理
+
+## ​ 最佳实践
+
+#### ​ 本地客户端作为公共OAuth 2.1客户端
+
+我们强烈建议本地客户端将OAuth 2.1实现为公共客户端：
+
+- 利用代码挑战（PKCE）进行授权请求以防止拦截攻击
+
+- 为本地系统实施适当的安全令牌存储
+
+- 遵循令牌刷新最佳实践以维护会话
+
+- 正确处理令牌过期和续订
+
+#### ​ 授权元数据发现
+
+我们强烈建议所有客户端实施元数据发现。这减少了用户手动提供端点的需要，或客户端回退到定义的默认值。
+
+#### ​ 动态客户端注册
+
+由于客户端无法提前知道MCP服务器的集合，我们强烈建议实施动态客户端注册。这允许应用程序自动注册到MCP服务器，并消除了用户手动获取客户端ID的需要。
+
+传输 Cancellation
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

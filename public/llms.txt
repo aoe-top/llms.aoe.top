@@ -1,0 +1,69 @@
+# AOE Friendly Links Knowledge Base
+
+> A crawlable knowledge base for the websites listed in api.aoe.top Friendly.all.
+
+This site mirrors structured, LLM-friendly text for 37 linked websites. It provides an overview, a compact full index, per-site Markdown files, per-page Markdown files, and JSON APIs.
+
+Generated: 2026-06-18T03:10:14.671Z
+Source: https://github.com/aoe-top/api.aoe.top/blob/master/server/utils/friendly.ts
+
+## Recommended Entry Points
+
+- Full index summary: https://llms.aoe.top/llms-full.txt
+- Site index JSON: https://llms.aoe.top/api/sites.json
+- Page index JSON: https://llms.aoe.top/api/pages.json
+- Full content JSON: https://llms.aoe.top/api/content.json
+- Sitemap: https://llms.aoe.top/sitemap.xml
+
+## Crawl Policy
+
+Search, retrieval, general web, and user-triggered AI crawlers are allowed. Listed training-only or broad AI crawlers are disallowed in robots.txt.
+
+## AOE.TOP
+
+- [小莫个人站](https://llms.aoe.top/sites/aoe-top.md): 3 captured pages from https://www.aoe.top/
+- [小莫博客园](https://llms.aoe.top/sites/blog-aoe-top.md): 948 captured pages from https://blog.aoe.top/
+- [小莫网盘](https://llms.aoe.top/sites/cloud-aoe-top.md): 0 captured pages from https://cloud.aoe.top/
+- [小莫Wiki](https://llms.aoe.top/sites/wiki-aoe-top.md): 290 captured pages from https://wiki.aoe.top/
+- [小莫工具箱](https://llms.aoe.top/sites/tools-aoe-top.md): 4 captured pages from https://tools.aoe.top/
+- [小莫私有云](https://llms.aoe.top/sites/pan-aoe-top.md): 0 captured pages from https://pan.aoe.top/
+- [塔罗牌](https://llms.aoe.top/sites/tarot-aoe-top.md): 99 captured pages from https://tarot.aoe.top/
+- [Gloss Mod Manager](https://llms.aoe.top/sites/gmm-aoe-top.md): 11 captured pages from https://gmm.aoe.top/
+- [Native DB](https://llms.aoe.top/sites/nativedb-aoe-top.md): 0 captured pages from https://nativedb.aoe.top/
+- [MBTI 性格测试](https://llms.aoe.top/sites/mbti-aoe-top.md): 0 captured pages from https://mbti.aoe.top/
+- [BDSM 倾向人格测试](https://llms.aoe.top/sites/dbsm-aoe-top.md): 0 captured pages from https://dbsm.aoe.top/
+- [PCL2](https://llms.aoe.top/sites/pcl2-aoe-top.md): 1 captured pages from https://pcl2.aoe.top/
+- [图吧工具箱](https://llms.aoe.top/sites/tbtool-aoe-top.md): 2 captured pages from https://tbtool.aoe.top/
+- [MD5 加密工具](https://llms.aoe.top/sites/md5-aoe-top.md): 1 captured pages from https://md5.aoe.top/
+- [AI工具库](https://llms.aoe.top/sites/ai-aoe-top.md): 1 captured pages from https://ai.aoe.top/
+- [动漫共和国](https://llms.aoe.top/sites/dmghg-aoe-top.md): 2 captured pages from https://dmghg.aoe.top/
+- [赞助小莫](https://llms.aoe.top/sites/sponsor-aoe-top.md): 1 captured pages from https://sponsor.aoe.top/
+- [PCL CE 社区版](https://llms.aoe.top/sites/pcl-ce-aoe-top.md): 2 captured pages from https://pcl-ce.aoe.top/
+- [洛克王国工具箱](https://llms.aoe.top/sites/rocom-aoe-top.md): 0 captured pages from https://rocom.aoe.top/
+- [SBTI 测试](https://llms.aoe.top/sites/sbti-aoe-top.md): 0 captured pages from https://sbti.aoe.top/
+- [状态检测](https://llms.aoe.top/sites/status-aoe-top.md): 1 captured pages from https://status.aoe.top/
+
+## GJXX.DEV
+
+- [Winstep Nexus](https://llms.aoe.top/sites/nexus-gjxx-dev.md): 1 captured pages from https://nexus.gjxx.dev/
+- [AI 记牌器](https://llms.aoe.top/sites/aijpq-gjxx-dev.md): 1 captured pages from https://aijpq.gjxx.dev/
+- [BongoCat](https://llms.aoe.top/sites/bongocat-gjxx-dev.md): 1 captured pages from https://bongocat.gjxx.dev/
+- [Gamma Panel](https://llms.aoe.top/sites/gammapanel-gjxx-dev.md): 1 captured pages from https://gammapanel.gjxx.dev/
+- [MCP中文文档](https://llms.aoe.top/sites/mcp-gjxx-dev.md): 105 captured pages from https://mcp.gjxx.dev/
+- [免费建站](https://llms.aoe.top/sites/mkw-gjxx-dev.md): 1 captured pages from https://mkw.gjxx.dev/
+- [蘑菇下载器](https://llms.aoe.top/sites/pcstory-gjxx-dev.md): 2 captured pages from https://pcstory.gjxx.dev/
+- [SmokeAPI](https://llms.aoe.top/sites/smokeapi-gjxx-dev.md): 2 captured pages from https://smokeapi.gjxx.dev/
+- [工具导航](https://llms.aoe.top/sites/gjxx-dev.md): 19 captured pages from https://www.gjxx.dev/
+
+## Glosc AI
+
+- [Glosc AI](https://llms.aoe.top/sites/gloscai-com.md): 0 captured pages from https://www.gloscai.com/
+- [Glosc AI One](https://llms.aoe.top/sites/one-gloscai-com.md): 0 captured pages from https://one.gloscai.com/
+- [Glosc Copilot](https://llms.aoe.top/sites/copilot-gloscai-com.md): 0 captured pages from https://copilot.gloscai.com/
+- [Glosc Nutri](https://llms.aoe.top/sites/nutri-gloscai-com.md): 9 captured pages from https://nutri.gloscai.com/
+- [说猫语](https://llms.aoe.top/sites/cat-gloscai-com.md): 0 captured pages from https://cat.gloscai.com/
+- [Glosc Authenticator](https://llms.aoe.top/sites/2fa-gloscai-com.md): 0 captured pages from https://2fa.gloscai.com/
+
+## Gloss Mod
+
+- [Gloss Mod 组](https://llms.aoe.top/sites/glossmod-com.md): 0 captured pages from https://www.glossmod.com/

@@ -1,0 +1,111 @@
+# 【NodeJS】借助 nodemon 实现热加载 | 小莫的博客园
+
+Source: https://blog.aoe.top/NodeJS/585
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:07.739Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: nodemon 文档地址：https://www.npmjs.com/package/nodemon nodemonnodemon 是一个工具，它通过在检测到目录中的文件更改时自动重新启动Node应用程序来帮助开发基于 Node.js 的应用程序，来实现热加载的效果。 nodemon 不需要对您的代码或开发方法进行任何额外的更改。 nodemon 是 node 的替代包装器。 要使用 nodemo
+
+## Content
+
+# 【NodeJS】借助 nodemon 实现热加载
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. nodemon
+- 2. 安装
+- 3. 使用
+- 4. 配置到 package.json
+
+nodemon 文档地址： https://www.npmjs.com/package/nodemon
+
+## nodemon
+
+nodemon 是一个工具，它通过在检测到目录中的文件更改时自动重新启动Node应用程序来帮助开发基于 Node.js 的应用程序，来实现热加载的效果。
+
+nodemon 不需要对您的代码或开发方法进行任何额外的更改。 nodemon 是 node 的替代包装器。 要使用 nodemon，请在执行脚本时替换命令行中的单词 node。
+
+## 安装
+
+1
+
+|
+npm install -g nodemon
+
+|
+
+## 使用
+
+nodemon 包装您的应用程序，因此您可以将通常传递给您的应用程序的所有参数传递给您：
+
+1
+
+|
+nodemon [your node app]
+
+|
+
+对于 CLI 选项，使用 -h（或 –help）参数：
+
+1
+
+|
+nodemon -h
+
+|
+
+使用 nodemon 很简单，如：
+
+1
+
+|
+nodemon app.js
+
+|
+
+此脚本的任何输出都以 [nodemon] 为前缀，否则应用程序的所有输出（包括错误）都将按预期回显。
+
+您还可以像往常一样通过命令行将检查标志传递给Node：
+
+1
+
+|
+nodemon --inspect ./server.js 80
+
+|
+
+## 配置到 package.json
+
+为了方便，也可以将运行代码配置到package.json文件中
+如：
+
+1
+2
+3
+
+|
+"scripts": {
+"dev": "nodemon app.js"
+},
+
+|
+
+然后就可以直接运行 npm run dev 启动程序了
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+NodeJs , nodemon , 热加载
+
+最后编辑：2026-05-07
+
+下一篇

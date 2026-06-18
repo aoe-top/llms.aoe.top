@@ -1,0 +1,192 @@
+# 根目录 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/2024-11-05/client/roots
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:31.262Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 用户交互模型
+- 功能
+- 协议消息 列出根目录
+- 根目录列表更改
+- 消息流程
+- 数据类型 根目录
+- 项目目录
+- 多个仓库
+- 错误处理
+- 安全考虑
+- 实现指南
+
+客户端功能
+
+# 根目录
+
+Copy page
+
+Copy page
+
+协议修订 : 2024-11-05
+
+Model Context Protocol (MCP) 为客户端提供了一种标准化的方式来向服务器暴露文件系统”根目录”。根目录定义了服务器可以在文件系统中操作的边界，允许它们了解它们可以访问哪些目录和文件。服务器可以从支持的客户端请求根目录列表，并在列表更改时接收通知。
+
+## ​ 用户交互模型
+
+MCP中的根目录通常通过工作区或项目配置界面暴露。
+例如，实现可以提供工作区/项目选择器，允许用户选择服务器应该访问的目录和文件。这可以与版本控制系统或项目文件的自动工作区检测相结合。
+但是，实现可以自由地通过任何适合其需求的界面模式来暴露根目录——协议本身不强制任何特定的用户交互模型。
+
+## ​ 功能
+
+支持根目录的客户端 必须 在 初始化 期间声明 roots 功能：
+
+{
+"capabilities" : {
+"roots" : {
+"listChanged" : true
+}
+}
+}
+
+listChanged 指示客户端是否会在根目录列表更改时发出通知。
+
+## ​ 协议消息
+
+### ​ 列出根目录
+
+要检索根目录，服务器发送 roots/list 请求：
+请求：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 1 ,
+"method" : "roots/list"
+}
+
+响应：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 1 ,
+"result" : {
+"roots" : [
+{
+"uri" : "file:///home/user/projects/myproject" ,
+"name" : "My Project"
+}
+]
+}
+}
+
+### ​ 根目录列表更改
+
+当根目录更改时，支持 listChanged 的客户端 必须 发送通知：
+
+{
+"jsonrpc" : "2.0" ,
+"method" : "notifications/roots/list_changed"
+}
+
+## ​ 消息流程
+
+## ​ 数据类型
+
+### ​ 根目录
+
+根目录定义包括：
+
+- uri ：根目录的唯一标识符。这 必须 是当前规范中的 file:// URI。
+
+- name ：可选的人类可读名称，用于显示目的。
+
+不同用例的示例根目录：
+
+#### ​ 项目目录
+
+{
+"uri" : "file:///home/user/projects/myproject" ,
+"name" : "My Project"
+}
+
+#### ​ 多个仓库
+
+[
+{
+"uri" : "file:///home/user/repos/frontend" ,
+"name" : "Frontend Repository"
+},
+{
+"uri" : "file:///home/user/repos/backend" ,
+"name" : "Backend Repository"
+}
+]
+
+## ​ 错误处理
+
+客户端 应该 为常见失败情况返回标准JSON-RPC错误：
+
+- 客户端不支持根目录： -32601 （方法未找到）
+
+- 内部错误： -32603
+
+错误示例：
+
+{
+"jsonrpc" : "2.0" ,
+"id" : 1 ,
+"error" : {
+"code" : -32601 ,
+"message" : "Roots not supported" ,
+"data" : {
+"reason" : "Client does not have roots capability"
+}
+}
+}
+
+## ​ 安全考虑
+
+- 客户端 必须 ： 仅暴露具有适当权限的根目录
+
+- 验证所有根目录URI以防止路径遍历
+
+- 实现适当的访问控制
+
+- 监控根目录可访问性
+
+- 服务器 应该 ： 处理根目录变得不可用的情况
+
+- 在操作期间尊重根目录边界
+
+- 根据提供的根目录验证所有路径
+
+## ​ 实现指南
+
+- 客户端 应该 ： 在向服务器暴露根目录之前提示用户同意
+
+- 为根目录管理提供清晰的用户界面
+
+- 在暴露之前验证根目录可访问性
+
+- 监控根目录更改
+
+- 服务器 应该 ： 在使用之前检查根目录功能
+
+- 优雅地处理根目录列表更改
+
+- 在操作中尊重根目录边界
+
+- 适当缓存根目录信息
+
+进度 采样
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

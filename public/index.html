@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AOE Friendly Links Knowledge Base for LLMs</title>
+  <meta name="description" content="A crawlable knowledge base generated from Friendly.all links in api.aoe.top.">
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM overview">
+  <link rel="alternate" type="text/plain" href="/llms-full.txt" title="LLM full knowledge base">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5ef;
+      --panel: #ffffff;
+      --ink: #17201a;
+      --muted: #607067;
+      --line: #d9ded6;
+      --accent: #0f6b5f;
+      --accent-2: #8b4e13;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    header, main, footer { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 48px 0 28px; }
+    h1 { margin: 0 0 12px; font-size: clamp(32px, 5vw, 56px); line-height: 1.02; letter-spacing: 0; }
+    h2 { margin: 34px 0 12px; font-size: 22px; letter-spacing: 0; }
+    p { max-width: 780px; color: var(--muted); }
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .toolbar a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 12px 0 28px;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-width: 0;
+    }
+    .stat strong { display: block; font-size: 24px; color: var(--accent-2); }
+    .stat span { color: var(--muted); font-size: 13px; }
+    section { margin: 22px 0 30px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { font-size: 13px; color: var(--muted); background: #eef1eb; }
+    tr:last-child td { border-bottom: 0; }
+    footer { padding: 24px 0 48px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 720px) {
+      header, main, footer { width: min(100% - 22px, 1120px); }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      table { display: block; overflow-x: auto; }
+      th, td { white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AOE Friendly Links Knowledge Base</h1>
+    <p>面向大模型检索的静态知识入口，内容来自 <code>api.aoe.top/server/utils/friendly.ts</code> 中的 37 个站点。构建时抓取每个站点的首页、LLM 文件、sitemap 页面和同源入口，并输出 Markdown、TXT、JSON 和 sitemap。</p>
+    <nav class="toolbar" aria-label="Knowledge endpoints">
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/llms-full.txt">llms-full.txt</a>
+      <a href="/api/sites.json">sites.json</a>
+      <a href="/api/pages.json">pages.json</a>
+      <a href="/api/content.json">content.json</a>
+      <a href="/sitemap.xml">sitemap.xml</a>
+    </nav>
+  </header>
+  <main>
+    <div class="stats">
+      <div class="stat"><strong>37</strong><span>Friendly sites</span></div>
+      <div class="stat"><strong>1508</strong><span>Captured pages</span></div>
+      <div class="stat"><strong>88</strong><span>Failed requests</span></div>
+      <div class="stat"><strong>3,163,996</strong><span>Text characters</span></div>
+    </div>
+    
+        <section>
+          <h2>AOE.TOP</h2>
+          <table>
+            <thead><tr><th>Site</th><th>Origin</th><th>Pages</th><th>Text chars</th><th>Data</th></tr></thead>
+            <tbody>
+          <tr>
+            <td><a href="/sites/aoe-top.md">小莫个人站</a></td>
+            <td><a href="https://www.aoe.top/">www.aoe.top</a></td>
+            <td>3/3</td>
+            <td>189</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/blog-aoe-top.md">小莫博客园</a></td>
+            <td><a href="https://blog.aoe.top/">blog.aoe.top</a></td>
+            <td>948/951</td>
+            <td>941,607</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/cloud-aoe-top.md">小莫网盘</a></td>
+            <td><a href="https://cloud.aoe.top/">cloud.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/wiki-aoe-top.md">小莫Wiki</a></td>
+            <td><a href="https://wiki.aoe.top/">wiki.aoe.top</a></td>
+            <td>290/292</td>
+            <td>926,855</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/tools-aoe-top.md">小莫工具箱</a></td>
+            <td><a href="https://tools.aoe.top/">tools.aoe.top</a></td>
+            <td>4/7</td>
+            <td>2,804</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/pan-aoe-top.md">小莫私有云</a></td>
+            <td><a href="https://pan.aoe.top/">pan.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/tarot-aoe-top.md">塔罗牌</a></td>
+            <td><a href="https://tarot.aoe.top/">tarot.aoe.top</a></td>
+            <td>99/102</td>
+            <td>452,456</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/gmm-aoe-top.md">Gloss Mod Manager</a></td>
+            <td><a href="https://gmm.aoe.top/">gmm.aoe.top</a></td>
+            <td>11/13</td>
+            <td>10,600</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/nativedb-aoe-top.md">Native DB</a></td>
+            <td><a href="https://nativedb.aoe.top/">nativedb.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/mbti-aoe-top.md">MBTI 性格测试</a></td>
+            <td><a href="https://mbti.aoe.top/">mbti.aoe.top</a></td>
+            <td>0/27</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/dbsm-aoe-top.md">BDSM 倾向人格测试</a></td>
+            <td><a href="https://dbsm.aoe.top/">dbsm.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/pcl2-aoe-top.md">PCL2</a></td>
+            <td><a href="https://pcl2.aoe.top/">pcl2.aoe.top</a></td>
+            <td>1/3</td>
+            <td>1,949</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/tbtool-aoe-top.md">图吧工具箱</a></td>
+            <td><a href="https://tbtool.aoe.top/">tbtool.aoe.top</a></td>
+            <td>2/4</td>
+            <td>3,611</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/md5-aoe-top.md">MD5 加密工具</a></td>
+            <td><a href="https://md5.aoe.top/">md5.aoe.top</a></td>
+            <td>1/3</td>
+            <td>1,033</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/ai-aoe-top.md">AI工具库</a></td>
+            <td><a href="https://ai.aoe.top/">ai.aoe.top</a></td>
+            <td>1/5</td>
+            <td>129</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/dmghg-aoe-top.md">动漫共和国</a></td>
+            <td><a href="https://dmghg.aoe.top/">dmghg.aoe.top</a></td>
+            <td>2/4</td>
+            <td>1,372</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/sponsor-aoe-top.md">赞助小莫</a></td>
+            <td><a href="https://sponsor.aoe.top/">sponsor.aoe.top</a></td>
+            <td>1/3</td>
+            <td>301</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/pcl-ce-aoe-top.md">PCL CE 社区版</a></td>
+            <td><a href="https://pcl-ce.aoe.top/">pcl-ce.aoe.top</a></td>
+            <td>2/6</td>
+            <td>381</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/rocom-aoe-top.md">洛克王国工具箱</a></td>
+            <td><a href="https://rocom.aoe.top/">rocom.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/sbti-aoe-top.md">SBTI 测试</a></td>
+            <td><a href="https://sbti.aoe.top/">sbti.aoe.top</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/status-aoe-top.md">状态检测</a></td>
+            <td><a href="https://status.aoe.top/">status.aoe.top</a></td>
+            <td>1/3</td>
+            <td>3,627</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr></tbody>
+          </table>
+        </section>
+        <section>
+          <h2>GJXX.DEV</h2>
+          <table>
+            <thead><tr><th>Site</th><th>Origin</th><th>Pages</th><th>Text chars</th><th>Data</th></tr></thead>
+            <tbody>
+          <tr>
+            <td><a href="/sites/nexus-gjxx-dev.md">Winstep Nexus</a></td>
+            <td><a href="https://nexus.gjxx.dev/">nexus.gjxx.dev</a></td>
+            <td>1/3</td>
+            <td>1,700</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/aijpq-gjxx-dev.md">AI 记牌器</a></td>
+            <td><a href="https://aijpq.gjxx.dev/">aijpq.gjxx.dev</a></td>
+            <td>1/3</td>
+            <td>1,778</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/bongocat-gjxx-dev.md">BongoCat</a></td>
+            <td><a href="https://bongocat.gjxx.dev/">bongocat.gjxx.dev</a></td>
+            <td>1/3</td>
+            <td>632</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/gammapanel-gjxx-dev.md">Gamma Panel</a></td>
+            <td><a href="https://gammapanel.gjxx.dev/">gammapanel.gjxx.dev</a></td>
+            <td>1/3</td>
+            <td>797</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/mcp-gjxx-dev.md">MCP中文文档</a></td>
+            <td><a href="https://mcp.gjxx.dev/">mcp.gjxx.dev</a></td>
+            <td>105/105</td>
+            <td>770,371</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/mkw-gjxx-dev.md">免费建站</a></td>
+            <td><a href="https://mkw.gjxx.dev/">mkw.gjxx.dev</a></td>
+            <td>1/3</td>
+            <td>1,151</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/pcstory-gjxx-dev.md">蘑菇下载器</a></td>
+            <td><a href="https://pcstory.gjxx.dev/">pcstory.gjxx.dev</a></td>
+            <td>2/4</td>
+            <td>1,173</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/smokeapi-gjxx-dev.md">SmokeAPI</a></td>
+            <td><a href="https://smokeapi.gjxx.dev/">smokeapi.gjxx.dev</a></td>
+            <td>2/4</td>
+            <td>4,996</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/gjxx-dev.md">工具导航</a></td>
+            <td><a href="https://www.gjxx.dev/">www.gjxx.dev</a></td>
+            <td>19/21</td>
+            <td>27,346</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr></tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Glosc AI</h2>
+          <table>
+            <thead><tr><th>Site</th><th>Origin</th><th>Pages</th><th>Text chars</th><th>Data</th></tr></thead>
+            <tbody>
+          <tr>
+            <td><a href="/sites/gloscai-com.md">Glosc AI</a></td>
+            <td><a href="https://www.gloscai.com/">www.gloscai.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/one-gloscai-com.md">Glosc AI One</a></td>
+            <td><a href="https://one.gloscai.com/">one.gloscai.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/copilot-gloscai-com.md">Glosc Copilot</a></td>
+            <td><a href="https://copilot.gloscai.com/">copilot.gloscai.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/nutri-gloscai-com.md">Glosc Nutri</a></td>
+            <td><a href="https://nutri.gloscai.com/">nutri.gloscai.com</a></td>
+            <td>9/13</td>
+            <td>7,138</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/cat-gloscai-com.md">说猫语</a></td>
+            <td><a href="https://cat.gloscai.com/">cat.gloscai.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr>
+          <tr>
+            <td><a href="/sites/2fa-gloscai-com.md">Glosc Authenticator</a></td>
+            <td><a href="https://2fa.gloscai.com/">2fa.gloscai.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr></tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Gloss Mod</h2>
+          <table>
+            <thead><tr><th>Site</th><th>Origin</th><th>Pages</th><th>Text chars</th><th>Data</th></tr></thead>
+            <tbody>
+          <tr>
+            <td><a href="/sites/glossmod-com.md">Gloss Mod 组</a></td>
+            <td><a href="https://www.glossmod.com/">www.glossmod.com</a></td>
+            <td>0/3</td>
+            <td>0</td>
+            <td><a href="/api/sites.json">JSON</a></td>
+          </tr></tbody>
+          </table>
+        </section>
+  </main>
+  <footer>
+    Generated at 2026-06-18T03:10:14.671Z. Source links: <a href="https://github.com/aoe-top/api.aoe.top/blob/master/server/utils/friendly.ts">friendly.ts</a>.
+  </footer>
+</body>
+</html>

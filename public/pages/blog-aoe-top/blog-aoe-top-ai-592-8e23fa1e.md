@@ -1,0 +1,93 @@
+# 【NovelAI】从入门到AI 教你如何部署本地 NovelAI | 小莫的博客园
+
+Source: https://blog.aoe.top/AI/592
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:26:57.794Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 前几天 著名的绘图AI ： NovelAI 的训练模型被分享了出来。于是，决定“简单”的研究研究。如果喜欢可以去支持正版：http://novelai.net/ 云端使用已经有大佬弄的在Google云运行的版本：https://colab.research.google.com/drive/1gk-R0lx0T_Pk3kETvcMDs4Js8vxzSaKm?usp=sharing 一段段的运行相
+
+## Content
+
+# 【NovelAI】从入门到AI 教你如何部署本地 NovelAI
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 云端使用
+- 2. 前置工具：
+- 3. 开始
+- 4. 辅助工具
+
+前几天 著名的绘图AI ： NovelAI 的训练模型被分享了出来。
+于是，决定“简单”的研究研究。
+如果喜欢可以去支持正版： http://novelai.net/
+
+### 云端使用
+
+已经有大佬弄的在Google云运行的版本： https://colab.research.google.com/drive/1gk-R0lx0T_Pk3kETvcMDs4Js8vxzSaKm?usp=sharing
+
+一段段的运行相关代码就行了, 注释也写的很清楚, 还能白嫖Google的显卡。
+缺点就是需要梯子，然后就是免费版只能跑小模型, 大模型带不动。
+
+如果你有一张好的显卡，那么可以来试试搭建本地环境
+
+### 前置工具：
+
+- Python 3.10.6
+
+- 训练好的模型： magnet:?xt=urn:btih:5bde442da86265b670a3e5ea3163afad2c6f8ecc 总的模型有50+GB，但其实里面有很多个不同的模型，每个也就几G，可以选择性下载。
+
+- Stable Diffusion web UI: 最新版 | 中文汉化版 (还没汉化完)
+
+### 开始
+
+准备任务
+
+- 安装并更新显卡驱动，如果已经是最新就跳过这一步
+
+- 从GitHub下载 Stable Diffusion web UI
+
+- 安装 Python 3.10.6 在安装的时候记得勾选 添加到环境变量
+
+安装模型
+
+- 打开你下载的模型目录
+
+- 将 animevae.pt 复制到 \stable-diffusion-webui\models\Stable-diffusion\ 目录,重命名为 model.vae.pt
+
+- 选一个你想要的模型 将它的 model.ckpt 复制到 \stable-diffusion-webui\models\Stable-diffusion\ 目录,
+
+- 将它的 config.yaml 复制到 \stable-diffusion-webui\models\Stable-diffusion\ 目录, 重命名为 model.yaml
+
+运行
+
+- 双击运行 \stable-diffusion-webui\webui-user.bat 然后等它自己安装运行环境 具体速度取决于你的电脑配置和网速,如果遇到下载失败的东西记得挂梯子
+
+- 当运行到提示 Running on local URL: http://127.0.0.1:7860 的时候, 说明已经启动完毕
+
+- 浏览器访问 http://127.0.0.1:7860 开始用AI来绘图吧
+
+### 辅助工具
+
+- 在线免费的SD 绘画: https://webui.graviti.com/
+
+- 一个神奇的网站: https://novelai.dev/
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+NovelAI , 绘画工具 , 部署本地
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

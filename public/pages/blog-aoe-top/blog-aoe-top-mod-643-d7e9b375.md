@@ -1,0 +1,397 @@
+# 【Mod开发实例】利用Script Hook RDR2 用C++ 为荒野大镖客2 制作脚本Mod 实现“传送到坐标点” | 小莫的博客园
+
+Source: https://blog.aoe.top/Mod/643
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:27:01.531Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 源码: https://github.com/3DMXM/TestModForAsiAtRDR2 准备工作 安装 Visual Studio：https://visualstudio.microsoft.com/zh-hans/ 以下简称“VS” RDR2 NativeDB 库 ：https://mod.3dmgame.com/NativeDB 下载Script Hook RDR2 SDK：ht
+
+## Content
+
+# 【Mod开发实例】利用Script Hook RDR2 用C++ 为荒野大镖客2 制作脚本Mod 实现“传送到坐标点”
+
+- 2024-06-25
+
+- 作者 小莫
+
+- 1. 准备工作
+- 2. 注意
+- 3. 创建项目
+- 4. 开始编写
+- 5. 完整代码
+
+源码: https://github.com/3DMXM/TestModForAsiAtRDR2
+
+### 准备工作
+
+- 安装 Visual Studio： https://visualstudio.microsoft.com/zh-hans/ 以下简称“VS”
+
+- RDR2 NativeDB 库 ： https://mod.3dmgame.com/NativeDB
+
+- 下载Script Hook RDR2 SDK： http://www.dev-c.com/rdr2/scripthookrdr2
+
+### 注意
+
+在安装Visual Studio的时候，请确定安装了C++工具包，至少需要安装一下工具：
+
+- 使用C++的桌面开发
+
+- Windows 10 SDK （任意版本）
+
+- MSVC （任意版本）
+
+- C++ 通用平台工具（任意版本）
+
+（如果漏装了，可以重新运行“Visual Studio Installer”进行安装）
+
+### 创建项目
+
+虽然我很想这样从0开始创建项目，但是这样创建后的配置起来特别麻烦，不仅要手动修改生成类型、预设头、链入lib，还要修改入口函数等等一些特别复杂的东西，所以我决定直接在SDK中的Pools.sln项目的基础上进行修改。
+
+将SDK中的文件Pools项目复制出来，然后重命名，接着将SDK中的“inc”和“ilb”也复制过来，
+
+然后改一下“script.h”、“main.cpp”中的引用文件路径
+
+除此之外，还需要设置 项目->属性 中的
+
+1.常规中的“Windows SDK 版本”和“平台工具集”修改
+
+2.“配置器”->“命令行”->“其他选项” 中 ScriptHookRDR2.lib 的路径
+
+全部准备好后，按F6启动生成项目，如果提示生成成功，那么准备工作就算完成了
+
+### 开始编写
+
+打开“script.cpp”文件，删除不必要的代码，只留下“ScriptMain()” “main()” 函数，“update()”函数中的所有内容全部删除，大概是这个样子：
+
+现在，我们来开始实现按“F9”然后在主角传送到地图上的标记点，所以，我们需要先判断用户是否按下按键：
+引入SDK中“NativeTrainer” 里面的“keyboard.cpp”和“keyboard.h”文件
+修改“main.cpp”中的代码为
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+|
+# include "inc\main.h"
+# include "script.h"
+# include "keyboard.h"
+
+BOOL APIENTRY DllMain (HMODULE hInstance, DWORD reason, LPVOID lpReserved)
+{
+switch (reason)
+{
+case DLL_PROCESS_ATTACH:
+scriptRegister (hInstance, ScriptMain);
+keyboardHandlerRegister (OnKeyboardMessage);
+break ;
+case DLL_PROCESS_DETACH:
+scriptUnregister (hInstance);
+keyboardHandlerUnregister (OnKeyboardMessage);
+break ;
+}
+return TRUE;
+}
+
+|
+
+回到“script.cpp”文件中
+先引入 #include "keyboard.h"
+键盘键值表参考：
+
+1
+2
+3
+4
+5
+
+|
+if ( IsKeyDown ( 120 ))
+{
+// 如果玩家按下键值为120的键（F9）时，执行代码
+
+}
+
+|
+
+接下来我们需要判断地图上是否有标记点，
+查阅NativeDB 库可找到 RADAR::IS_WAYPOINT_ACTIVE() [路径点是否激活] ，返回BOOL类型
+
+1
+2
+3
+4
+5
+
+|
+if (RADAR:: IS_WAYPOINT_ACTIVE ())
+{
+//如果玩家已添加标记点
+
+}
+
+|
+
+接下来是获取标记点的坐标位置，
+查阅NativeDB 库可找到 RADAR::GET_WAYPOINT_COORDS_3D() [获取路径点的3D坐标] ，返回Vector3
+直接新建变量接入即可
+
+1
+
+|
+Vector3 coords = RADAR:: GET_WAYPOINT_COORDS_3D ();
+
+|
+
+然后是传送玩家了，
+查询NativeDB 库可找到 ENTITY::SET_ENTITY_COORDS(Entity entity, float xPos, float yPos, float zPos, BOOL xAxis, BOOL yAxis, BOOL zAxis, BOOL clearArea) [设置实体坐标] ，无返回值
+
+这样有点复杂，需要来慢慢的解释：
+
+第一个参数，Entity entity是实体，也就是需要传送的实体，我们是传送玩家，所以需要获取玩家的实体，同时，也要判断，如果玩家在马上或者载具上，那么就连同马和载具一起传送，所以，获取实体的代码是：
+
+1
+2
+3
+4
+5
+6
+7
+
+|
+Entity entity = PLAYER:: PLAYER_PED_ID (); // 获取玩家实体
+if (PED:: IS_PED_ON_MOUNT (entity)) { // 玩家是否在坐马上
+entity = PED:: GET_MOUNT (entity); // 如果在则获取玩家正在使用的马
+}
+else if (PED:: IS_PED_IN_ANY_VEHICLE (entity, FALSE)) { // 如果没在则继续判断是否在载具中
+entity = PED:: GET_VEHICLE_PED_IS_USING (entity); // 如果在则获取玩家正在使用的载具
+}
+
+|
+
+第二~第四个参数，float xPos, float yPos, float zPos 是传送后的坐标，我们上面已经获取到标记点的3D坐标，所以直接用
+
+1
+
+|
+coords.x, coords.y, coords.z
+
+|
+
+就可以了
+
+第五~第七个参数，BOOL xAxis, BOOL yAxis, BOOL zAxis 这3个参数意义暂时不明，不过AB大佬给的值是 “0,0,1“”，我们也一样用0,0,1就行了
+第八个参数BOOL clearArea，传递一个BOOL值，是否清空区域，我们这里用FALSE即可。
+
+接下来还有一步，为了避免在传送的时候出现在高空或地底，我们还需要获取标记点的地面Z轴
+查阅NativeDB 库可以找到 GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(float x, float y, float z, float* groundZ, BOOL unk) [获取3D坐标中Z轴的地面位置]
+我们可以这样写：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+|
+if (!GAMEPLAY:: GET_GROUND_Z_FOR_3D_COORD (coords.x, coords.y, 100.0 , &coords.z, FALSE)) // 获取标记点中的地面Z轴坐标
+{
+static const float groundCheckHeight[] = {
+100.0 , 150.0 , 50.0 , 0.0 , 200.0 , 250.0 , 300.0 , 350.0 , 400.0 ,
+450.0 , 500.0 , 550.0 , 600.0 , 650.0 , 700.0 , 750.0 , 800.0
+};
+for each ( float height in groundCheckHeight)
+{
+ENTITY:: SET_ENTITY_COORDS_NO_OFFSET (entity, coords.x, coords.y, height, 0 , 0 , 1 );
+WAIT ( 100 );
+if (GAMEPLAY:: GET_GROUND_Z_FOR_3D_COORD (coords.x, coords.y, height, &coords.z, FALSE))
+{
+coords.z += 3.0 ;
+break ;
+}
+}
+}
+
+|
+
+至此，我们的功能就完成了，进游戏，添加一个标记点，然后按F9，即可直接传送到标记点，快捷键可修改IsKeyDown()中的值即可，
+
+### 完整代码
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+
+|
+# include "script.h"
+# include <string>
+# include <vector>
+# include "keyboard.h"
+
+void update ()
+{
+// 我们的主代码将写在这里
+
+if ( IsKeyDown ( 120 ))
+{
+// 如果玩家按下键值为120的键（F9）时，执行代码
+if (RADAR:: IS_WAYPOINT_ACTIVE ())
+{
+//如果玩家已添加标记点
+
+Vector3 coords = RADAR:: GET_WAYPOINT_COORDS_3D (); // 获取标记点的3D坐标
+
+Entity entity = PLAYER:: PLAYER_PED_ID (); // 获取玩家实体
+if (PED:: IS_PED_ON_MOUNT (entity)) { // 玩家是否在坐马上
+entity = PED:: GET_MOUNT (entity); // 如果在则获取玩家正在使用的马
+}
+else if (PED:: IS_PED_IN_ANY_VEHICLE (entity, FALSE)) { // 如果没在则继续判断是否在载具中
+entity = PED:: GET_VEHICLE_PED_IS_USING (entity); // 如果在则获取玩家正在使用的载具
+}
+
+if (!GAMEPLAY:: GET_GROUND_Z_FOR_3D_COORD (coords.x, coords.y, 100.0 , &coords.z, FALSE)) // 获取标记点中的地面Z轴坐标
+{
+static const float groundCheckHeight[] = {
+100.0 , 150.0 , 50.0 , 0.0 , 200.0 , 250.0 , 300.0 , 350.0 , 400.0 ,
+450.0 , 500.0 , 550.0 , 600.0 , 650.0 , 700.0 , 750.0 , 800.0
+};
+for each ( float height in groundCheckHeight)
+{
+ENTITY:: SET_ENTITY_COORDS_NO_OFFSET (entity, coords.x, coords.y, height, 0 , 0 , 1 );
+WAIT ( 100 );
+if (GAMEPLAY:: GET_GROUND_Z_FOR_3D_COORD (coords.x, coords.y, height, &coords.z, FALSE))
+{
+coords.z += 3.0 ;
+break ;
+}
+}
+}
+
+ENTITY:: SET_ENTITY_COORDS (entity, coords.x, coords.y, coords.z, 0 , 0 , 1 , FALSE); // 传送玩家到指定坐标
+}
+}
+}
+
+void main ()
+{
+while ( true )
+{
+update ();
+WAIT ( 0 );
+}
+}
+
+void ScriptMain ()
+{
+srand ( GetTickCount ());
+main ();
+}
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+C++ , Mod , 荒野大镖客
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

@@ -1,0 +1,203 @@
+# AOE Friendly Links Knowledge Base - Full Index
+
+Generated: 2026-06-18T03:10:14.671Z
+Source: https://github.com/aoe-top/api.aoe.top/blob/master/server/utils/friendly.ts
+Sites: 37
+Captured pages: 1508/1624
+Empty text pages: 28
+Text characters: 3163996
+
+This is a compact, index-oriented summary for LLM discovery. It intentionally does not inline every crawled page body. Full extracted text remains available in per-page Markdown files and https://llms.aoe.top/api/content.json.
+
+## Content Endpoints
+
+- Overview: https://llms.aoe.top/llms.txt
+- Full content JSON: https://llms.aoe.top/api/content.json
+- Page metadata JSON: https://llms.aoe.top/api/pages.json
+- Site metadata JSON: https://llms.aoe.top/api/sites.json
+- Sitemap: https://llms.aoe.top/sitemap.xml
+
+## AOE.TOP
+
+- [小莫个人站](https://llms.aoe.top/sites/aoe-top.md): 3/3 text pages; 189 text chars; source https://www.aoe.top/
+- [小莫博客园](https://llms.aoe.top/sites/blog-aoe-top.md): 948/951 text pages; 941607 text chars; source https://blog.aoe.top/
+- [小莫网盘](https://llms.aoe.top/sites/cloud-aoe-top.md): 0/3 text pages, 3 empty text; 0 text chars; source https://cloud.aoe.top/
+- [小莫Wiki](https://llms.aoe.top/sites/wiki-aoe-top.md): 290/292 text pages; 926855 text chars; source https://wiki.aoe.top/
+- [小莫工具箱](https://llms.aoe.top/sites/tools-aoe-top.md): 4/7 text pages; 2804 text chars; source https://tools.aoe.top/
+- [小莫私有云](https://llms.aoe.top/sites/pan-aoe-top.md): 0/3 text pages, 3 empty text; 0 text chars; source https://pan.aoe.top/
+- [塔罗牌](https://llms.aoe.top/sites/tarot-aoe-top.md): 99/102 text pages; 452456 text chars; source https://tarot.aoe.top/
+- [Gloss Mod Manager](https://llms.aoe.top/sites/gmm-aoe-top.md): 11/13 text pages; 10600 text chars; source https://gmm.aoe.top/
+- [Native DB](https://llms.aoe.top/sites/nativedb-aoe-top.md): 0/3 text pages, 1 empty text; 0 text chars; source https://nativedb.aoe.top/
+- [MBTI 性格测试](https://llms.aoe.top/sites/mbti-aoe-top.md): 0/27 text pages, 1 empty text; 0 text chars; source https://mbti.aoe.top/
+- [BDSM 倾向人格测试](https://llms.aoe.top/sites/dbsm-aoe-top.md): 0/3 text pages, 1 empty text; 0 text chars; source https://dbsm.aoe.top/
+- [PCL2](https://llms.aoe.top/sites/pcl2-aoe-top.md): 1/3 text pages; 1949 text chars; source https://pcl2.aoe.top/
+- [图吧工具箱](https://llms.aoe.top/sites/tbtool-aoe-top.md): 2/4 text pages; 3611 text chars; source https://tbtool.aoe.top/
+- [MD5 加密工具](https://llms.aoe.top/sites/md5-aoe-top.md): 1/3 text pages; 1033 text chars; source https://md5.aoe.top/
+- [AI工具库](https://llms.aoe.top/sites/ai-aoe-top.md): 1/5 text pages; 129 text chars; source https://ai.aoe.top/
+- [动漫共和国](https://llms.aoe.top/sites/dmghg-aoe-top.md): 2/4 text pages; 1372 text chars; source https://dmghg.aoe.top/
+- [赞助小莫](https://llms.aoe.top/sites/sponsor-aoe-top.md): 1/3 text pages; 301 text chars; source https://sponsor.aoe.top/
+- [PCL CE 社区版](https://llms.aoe.top/sites/pcl-ce-aoe-top.md): 2/6 text pages; 381 text chars; source https://pcl-ce.aoe.top/
+- [洛克王国工具箱](https://llms.aoe.top/sites/rocom-aoe-top.md): 0/3 text pages, 3 empty text; 0 text chars; source https://rocom.aoe.top/
+- [SBTI 测试](https://llms.aoe.top/sites/sbti-aoe-top.md): 0/3 text pages, 1 empty text; 0 text chars; source https://sbti.aoe.top/
+- [状态检测](https://llms.aoe.top/sites/status-aoe-top.md): 1/3 text pages; 3627 text chars; source https://status.aoe.top/
+
+## GJXX.DEV
+
+- [Winstep Nexus](https://llms.aoe.top/sites/nexus-gjxx-dev.md): 1/3 text pages; 1700 text chars; source https://nexus.gjxx.dev/
+- [AI 记牌器](https://llms.aoe.top/sites/aijpq-gjxx-dev.md): 1/3 text pages; 1778 text chars; source https://aijpq.gjxx.dev/
+- [BongoCat](https://llms.aoe.top/sites/bongocat-gjxx-dev.md): 1/3 text pages; 632 text chars; source https://bongocat.gjxx.dev/
+- [Gamma Panel](https://llms.aoe.top/sites/gammapanel-gjxx-dev.md): 1/3 text pages; 797 text chars; source https://gammapanel.gjxx.dev/
+- [MCP中文文档](https://llms.aoe.top/sites/mcp-gjxx-dev.md): 105/105 text pages; 770371 text chars; source https://mcp.gjxx.dev/
+- [免费建站](https://llms.aoe.top/sites/mkw-gjxx-dev.md): 1/3 text pages; 1151 text chars; source https://mkw.gjxx.dev/
+- [蘑菇下载器](https://llms.aoe.top/sites/pcstory-gjxx-dev.md): 2/4 text pages; 1173 text chars; source https://pcstory.gjxx.dev/
+- [SmokeAPI](https://llms.aoe.top/sites/smokeapi-gjxx-dev.md): 2/4 text pages; 4996 text chars; source https://smokeapi.gjxx.dev/
+- [工具导航](https://llms.aoe.top/sites/gjxx-dev.md): 19/21 text pages; 27346 text chars; source https://www.gjxx.dev/
+
+## Glosc AI
+
+- [Glosc AI](https://llms.aoe.top/sites/gloscai-com.md): 0/3 text pages, 1 empty text; 0 text chars; source https://www.gloscai.com/
+- [Glosc AI One](https://llms.aoe.top/sites/one-gloscai-com.md): 0/3 text pages, 3 empty text; 0 text chars; source https://one.gloscai.com/
+- [Glosc Copilot](https://llms.aoe.top/sites/copilot-gloscai-com.md): 0/3 text pages, 3 empty text; 0 text chars; source https://copilot.gloscai.com/
+- [Glosc Nutri](https://llms.aoe.top/sites/nutri-gloscai-com.md): 9/13 text pages, 2 empty text; 7138 text chars; source https://nutri.gloscai.com/
+- [说猫语](https://llms.aoe.top/sites/cat-gloscai-com.md): 0/3 text pages, 3 empty text; 0 text chars; source https://cat.gloscai.com/
+- [Glosc Authenticator](https://llms.aoe.top/sites/2fa-gloscai-com.md): 0/3 text pages, 3 empty text; 0 text chars; source https://2fa.gloscai.com/
+
+## Gloss Mod
+
+- [Gloss Mod 组](https://llms.aoe.top/sites/glossmod-com.md): 0/3 text pages; 0 text chars; source https://www.glossmod.com/
+
+## Selected Page Index
+
+Representative text-bearing pages are listed below. Additional page links are available from each site Markdown file and /api/pages.json.
+
+### 小莫个人站
+
+- [个人编程技术分享](https://llms.aoe.top/pages/aoe-top/www-aoe-top-llms-txt-d1f8219f.md): 63 chars; https://www.aoe.top/llms.txt
+- [个人编程技术分享](https://llms.aoe.top/pages/aoe-top/www-aoe-top-home-2b1fc0fe.md): 63 chars; https://www.aoe.top/
+- [个人编程技术分享](https://llms.aoe.top/pages/aoe-top/www-aoe-top-llms-full-txt-d5ece8f8.md): 63 chars; https://www.aoe.top/llms-full.txt
+
+### 小莫博客园
+
+- [小莫的博客园](https://llms.aoe.top/pages/blog-aoe-top/blog-aoe-top-home-65221ecf.md): 205 chars; https://blog.aoe.top/
+- [图吧工具箱深度解析：为什么它是 2026 年装机玩家的最佳选择？ | 小莫的博客园](https://llms.aoe.top/pages/blog-aoe-top/blog-aoe-top-guides-846-32efd94a.md): 1860 chars; https://blog.aoe.top/guides/846
+- [新手装机必看：如何用图吧工具箱快速识别电脑性能与健康度 | 小莫的博客园](https://llms.aoe.top/pages/blog-aoe-top/blog-aoe-top-guides-848-9be0209e.md): 1452 chars; https://blog.aoe.top/guides/848
+- [分类: guides | 小莫的博客园](https://llms.aoe.top/pages/blog-aoe-top/blog-aoe-top-categories-guides-ae031f4b.md): 10 chars; https://blog.aoe.top/categories/guides
+
+### 小莫Wiki
+
+- [小莫的维基库](https://llms.aoe.top/pages/wiki-aoe-top/wiki-aoe-top-home-a3ec4f89.md): 243 chars; https://wiki.aoe.top/
+- [Generating UHT compatible headers | 小莫的维基库](https://llms.aoe.top/pages/wiki-aoe-top/wiki-aoe-top-modtutorial-ue4ss-guides-generating-uht-compatible-headers-html-302126ac.md): 22894 chars; https://wiki.aoe.top/ModTutorial/UE4SS/guides/generating-uht-compatible-headers.html
+- [Fixing Missing AOBs (Advanced & In-Depth) | 小莫的维基库](https://llms.aoe.top/pages/wiki-aoe-top/wiki-aoe-top-modtutorial-ue4ss-guides-fixing-compatibility-problems-advanced-htm-e816aaa9.md): 10612 chars; https://wiki.aoe.top/ModTutorial/UE4SS/guides/fixing-compatibility-problems-advanced.html
+- [Installation | 小莫的维基库](https://llms.aoe.top/pages/wiki-aoe-top/wiki-aoe-top-modtutorial-ue4ss-installation-guide-html-46590165.md): 7204 chars; https://wiki.aoe.top/ModTutorial/UE4SS/installation-guide.html
+
+### 小莫工具箱
+
+- [小莫的工具箱](https://llms.aoe.top/pages/tools-aoe-top/tools-aoe-top-home-e2536e47.md): 191 chars; https://tools.aoe.top/
+- [IP_IP地址查询_本机IP_我的IP | 小莫的工具箱](https://llms.aoe.top/pages/tools-aoe-top/tools-aoe-top-tools-ip-ab34cc1b.md): 1001 chars; https://tools.aoe.top/tools/ip
+- [密码生成器_随机密码生成器_在线密码生成 | 小莫的工具箱](https://llms.aoe.top/pages/tools-aoe-top/tools-aoe-top-tools-password-799ea1a7.md): 958 chars; https://tools.aoe.top/tools/password
+- [MD5_MD5加密|解密_md5在线|解密加密 | 小莫的工具箱](https://llms.aoe.top/pages/tools-aoe-top/tools-aoe-top-tools-md5-63325e6f.md): 654 chars; https://tools.aoe.top/tools/md5
+
+### 塔罗牌
+
+- [奥秘塔罗牌](https://llms.aoe.top/pages/tarot-aoe-top/tarot-aoe-top-home-570f8800.md): 482 chars; https://tarot.aoe.top/
+- [恋人 (The Lovers ) | 奥秘塔罗牌](https://llms.aoe.top/pages/tarot-aoe-top/tarot-aoe-top-majorarcana-6-thelovers-html-8e092de5.md): 7530 chars; https://tarot.aoe.top/MajorArcana/6.TheLovers.html
+- [战车 (The Chariot ) | 奥秘塔罗牌](https://llms.aoe.top/pages/tarot-aoe-top/tarot-aoe-top-majorarcana-7-thechariot-html-ff9573e2.md): 6957 chars; https://tarot.aoe.top/MajorArcana/7.TheChariot.html
+- [魔术师 (The Magician) | 奥秘塔罗牌](https://llms.aoe.top/pages/tarot-aoe-top/tarot-aoe-top-majorarcana-1-themagician-html-391a78a4.md): 6742 chars; https://tarot.aoe.top/MajorArcana/1.TheMagician.html
+
+### Gloss Mod Manager
+
+- [Gloss Mod Manager - 智能游戏 Mod 管理器](https://llms.aoe.top/pages/gmm-aoe-top/gmm-aoe-top-home-b805d5fd.md): 523 chars; https://gmm.aoe.top/
+- [MCP 使用 - Gloss Mod Manager](https://llms.aoe.top/pages/gmm-aoe-top/gmm-aoe-top-docs-mcp-ff50dd68.md): 3396 chars; https://gmm.aoe.top/docs/MCP
+- [安装卸载 Mod - Gloss Mod Manager](https://llms.aoe.top/pages/gmm-aoe-top/gmm-aoe-top-docs-install-64163c5f.md): 1316 chars; https://gmm.aoe.top/docs/Install
+- [参与翻译 - Gloss Mod Manager](https://llms.aoe.top/pages/gmm-aoe-top/gmm-aoe-top-docs-translate-fd0d7d67.md): 1038 chars; https://gmm.aoe.top/docs/Translate
+
+### PCL2
+
+- [PCL2官网 - Plain Craft Launcher 2 PCL2下载 | 我的世界启动器 by 龙腾猫跃](https://llms.aoe.top/pages/pcl2-aoe-top/pcl2-aoe-top-home-a3916152.md): 1949 chars; https://pcl2.aoe.top/
+
+### 图吧工具箱
+
+- [图吧工具箱官网_图拉丁吧硬件检测工具箱下载地址 - 专业免费开源](https://llms.aoe.top/pages/tbtool-aoe-top/tbtool-aoe-top-home-81100ea2.md): 2591 chars; https://tbtool.aoe.top/
+- [图吧工具箱](https://llms.aoe.top/pages/tbtool-aoe-top/tbtool-aoe-top-sitemap-xml-40eb80d9.md): 1020 chars; https://tbtool.aoe.top/sitemap.xml
+
+### MD5 加密工具
+
+- [MD5 在线加密工具 - 免费 MD5 哈希生成器 | 支持大小写转换](https://llms.aoe.top/pages/md5-aoe-top/md5-aoe-top-home-afb6d601.md): 1033 chars; https://md5.aoe.top/
+
+### AI工具库
+
+- [小莫的AI工具库](https://llms.aoe.top/pages/ai-aoe-top/ai-aoe-top-home-ad036d03.md): 129 chars; https://ai.aoe.top/
+
+### 动漫共和国
+
+- [动漫共和国官网 - 动漫共和国下载与使用教程](https://llms.aoe.top/pages/dmghg-aoe-top/dmghg-aoe-top-home-f697d2ff.md): 1130 chars; https://dmghg.aoe.top/
+- [动漫共和国](https://llms.aoe.top/pages/dmghg-aoe-top/dmghg-aoe-top-sitemap-xml-faea395f.md): 242 chars; https://dmghg.aoe.top/sitemap.xml
+
+### 赞助小莫
+
+- [赞助小莫](https://llms.aoe.top/pages/sponsor-aoe-top/sponsor-aoe-top-home-39819f22.md): 301 chars; https://sponsor.aoe.top/
+
+### PCL CE 社区版
+
+- [PCL CE 官网 | PCL2 社区版下载](https://llms.aoe.top/pages/pcl-ce-aoe-top/pcl-ce-aoe-top-home-4191fa9e.md): 81 chars; https://pcl-ce.aoe.top/
+- [PCL CE 社区版](https://llms.aoe.top/pages/pcl-ce-aoe-top/pcl-ce-aoe-top-site-webmanifest-3004be70.md): 300 chars; https://pcl-ce.aoe.top/site.webmanifest
+
+### 状态检测
+
+- [AOE 服务状态](https://llms.aoe.top/pages/status-aoe-top/status-aoe-top-home-d4a45d43.md): 3627 chars; https://status.aoe.top/
+
+### Winstep Nexus
+
+- [Winstep Nexus - 专业Windows桌面停靠系统 | Winstep Nexus官网](https://llms.aoe.top/pages/nexus-gjxx-dev/nexus-gjxx-dev-home-2253a7b5.md): 1700 chars; https://nexus.gjxx.dev/
+
+### AI 记牌器
+
+- [AI 记牌器官网 - AI 记牌器下载_免费下载智能记牌助手](https://llms.aoe.top/pages/aijpq-gjxx-dev/aijpq-gjxx-dev-home-2991cadb.md): 1778 chars; https://aijpq.gjxx.dev/
+
+### BongoCat
+
+- [BongoCat - 跨平台桌面宠物 | 支持键盘鼠标同步动作的可爱桌宠](https://llms.aoe.top/pages/bongocat-gjxx-dev/bongocat-gjxx-dev-home-5bbd8985.md): 632 chars; https://bongocat.gjxx.dev/
+
+### Gamma Panel
+
+- [Gamma Panel - 实时调整屏幕亮度、对比度与 Gamma 值](https://llms.aoe.top/pages/gammapanel-gjxx-dev/gammapanel-gjxx-dev-home-7794ceb6.md): 797 chars; https://gammapanel.gjxx.dev/
+
+### MCP中文文档
+
+- [什么是模型上下文协议 (MCP)？ - Model Context Protocol](https://llms.aoe.top/pages/mcp-gjxx-dev/mcp-gjxx-dev-docs-getting-started-intro-dec18074.md): 969 chars; https://mcp.gjxx.dev/docs/getting-started/intro
+- [Model Context Protocol](https://llms.aoe.top/pages/mcp-gjxx-dev/mcp-gjxx-dev-llms-txt-cd33d013.md): 3772 chars; https://mcp.gjxx.dev/llms.txt
+- [Understanding Authorization in MCP - Model Context Protocol](https://llms.aoe.top/pages/mcp-gjxx-dev/mcp-gjxx-dev-docs-tutorials-security-authorization-964a1370.md): 38309 chars; https://mcp.gjxx.dev/docs/tutorials/security/authorization
+- [构建 MCP 服务器 - Model Context Protocol](https://llms.aoe.top/pages/mcp-gjxx-dev/mcp-gjxx-dev-docs-develop-build-server-37033684.md): 35062 chars; https://mcp.gjxx.dev/docs/develop/build-server
+
+### 免费建站
+
+- [MKW 免费建站 - 专业免费网站建设服务平台 | Make Your Site 打造你的网站](https://llms.aoe.top/pages/mkw-gjxx-dev/mkw-gjxx-dev-home-48602672.md): 1151 chars; https://mkw.gjxx.dev/
+
+### 蘑菇下载器
+
+- [pcstory蘑菇下载器官网 - 免费游戏下载工具 | 不限速下载上千款游戏](https://llms.aoe.top/pages/pcstory-gjxx-dev/pcstory-gjxx-dev-home-60311923.md): 47 chars; https://pcstory.gjxx.dev/
+- [蘑菇下载器](https://llms.aoe.top/pages/pcstory-gjxx-dev/pcstory-gjxx-dev-sitemap-xml-3d49972f.md): 1126 chars; https://pcstory.gjxx.dev/sitemap.xml
+
+### SmokeAPI
+
+- [SmokeAPI 官网 Steam 游戏 DLC 解锁补丁 下载](https://llms.aoe.top/pages/smokeapi-gjxx-dev/smokeapi-gjxx-dev-home-3e7bce81.md): 2959 chars; https://smokeapi.gjxx.dev/
+- [SmokeAPI](https://llms.aoe.top/pages/smokeapi-gjxx-dev/smokeapi-gjxx-dev-sitemap-xml-b87f2445.md): 2037 chars; https://smokeapi.gjxx.dev/sitemap.xml
+
+### 工具导航
+
+- [实用工具导航](https://llms.aoe.top/pages/gjxx-dev/www-gjxx-dev-home-117a3ce4.md): 2458 chars; https://www.gjxx.dev/
+- [PCL2官网 - Plain Craft Launcher 2 - 实用工具详情](https://llms.aoe.top/pages/gjxx-dev/www-gjxx-dev-sites-69b380f254f03aa89a187eeb-de8bc6b9.md): 1528 chars; https://www.gjxx.dev/sites/69b380f254f03aa89a187eeb
+- [PCL CE - 实用工具详情](https://llms.aoe.top/pages/gjxx-dev/www-gjxx-dev-sites-69b380f24d498588a37bbde3-e3bbfa3f.md): 1466 chars; https://www.gjxx.dev/sites/69b380f24d498588a37bbde3
+- [Gloss Mod Manager - 实用工具详情](https://llms.aoe.top/pages/gjxx-dev/www-gjxx-dev-sites-69b37e1e676bbea38d8eadb4-764b7926.md): 1445 chars; https://www.gjxx.dev/sites/69b37e1e676bbea38d8eadb4
+
+### Glosc Nutri
+
+- [吃得健康，活得更好 | Glosc Nutri](https://llms.aoe.top/pages/nutri-gloscai-com/nutri-gloscai-com-home-774deecf.md): 443 chars; https://nutri.gloscai.com/
+- [隐私权政策 - Glosc Nutri | Glosc Nutri](https://llms.aoe.top/pages/nutri-gloscai-com/nutri-gloscai-com-privacy-19644116.md): 2343 chars; https://nutri.gloscai.com/privacy
+- [隐私权政策 - Glosc Nutri | Glosc Nutri](https://llms.aoe.top/pages/nutri-gloscai-com/nutri-gloscai-com-en-privacy-9d1c6061.md): 2343 chars; https://nutri.gloscai.com/en/privacy
+- [Eat Healthy, Live Better | Glosc Nutri](https://llms.aoe.top/pages/nutri-gloscai-com/nutri-gloscai-com-en-8417f661.md): 988 chars; https://nutri.gloscai.com/en
+
+
+## Full Text Access
+
+Use per-page Markdown links or https://llms.aoe.top/api/content.json for complete captured text. Empty or failed pages remain in metadata APIs for diagnostics but are excluded from this compact index and sitemap page entries.

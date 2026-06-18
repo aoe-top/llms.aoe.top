@@ -1,0 +1,130 @@
+# 010 Editor 激活码生成器 + 使用方法 | 小莫的博客园
+
+Source: https://blog.aoe.top/notes/437
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:02.538Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 010 Editor是一个非常好用的16进制编辑工具，简单写一个激活方法；工具本体直接到官网下载即可：https://www.sweetscape.com/download/010editor/ 首先，下载激活码生成器：https://pan.aoe.top/Tools/010Editor 然后在host中添加： 1127.0.0.1 www.sweetscape.com 我们用python搭建
+
+## Content
+
+# 010 Editor 激活码生成器 + 使用方法
+
+- 2023-07-07
+
+- 作者 小莫
+
+010 Editor是一个非常好用的16进制编辑工具，简单写一个激活方法；
+工具本体直接到官网下载即可： https://www.sweetscape.com/download/010editor/
+
+首先，下载激活码生成器：
+https://pan.aoe.top/Tools/010Editor
+
+然后在host中添加：
+
+1
+
+|
+127.0.0.1 www.sweetscape.com
+
+|
+
+我们用python搭建一个本地服务器，端口为 80 ，模拟激活时软件访问官网验证的过程，并返回成功的内容：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+|
+from flask import Flask
+app = Flask(__name__)
+
+@app.route( '/cgibin/010editor_check_license_9b.php' )
+def hello ():
+return "<ss>valid</ss>"
+
+if __name__ == '__main__' :
+app.run(host= '127.0.0.1' , port= 80 )
+
+|
+
+然后，用激活码生成工具生成一个key
+
+然后直接激活使用吧
+
+另外，这是我生成的几个key，来给大家使用吧：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+|
+Name:Aoe
+Key:CC62-A69C-4E9D-2CCB
+
+Name:Aoe
+Key:E685-219C-BA20-062C
+
+Name:Aoe
+Key:BE44-0C9C-B358-5EED
+
+Name:Aoe
+Key:B33E-E59C-D0C7-5397
+
+Name:Aoe
+Key:071F-659C-B94A-E7B6
+
+Name:Aoe
+Key:DAB7-699C-4C9C-3A1E
+
+Name:Aoe
+Key:B7FF-099C-9DCA-5756
+
+Name:Aoe
+Key:E9BA-509C-E1B9-0913
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+010 Editor , 16进制 , key , 激活码 , 编辑器
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

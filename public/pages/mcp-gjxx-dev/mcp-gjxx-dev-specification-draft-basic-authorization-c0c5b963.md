@@ -1,0 +1,415 @@
+# 授权 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/specification/draft/basic/authorization
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:28:51.888Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+## Content
+
+## On this page
+
+- 概述 目的和范围
+- 协议要求
+- 标准合规性
+- 授权流程 角色
+- Overview
+- 授权服务器发现
+- 授权服务器位置
+- 受保护资源元数据发现要求
+- 授权服务器元数据发现
+- 序列图
+- 动态客户端注册
+- 范围选择策略
+- 授权流程步骤
+- 资源参数实现
+- Access Token Usage
+- Token Requirements
+- Token Handling
+- 错误处理
+- 范围挑战处理
+- 安全考虑 令牌受众绑定和验证
+- 令牌盗窃
+- 通信安全
+- 授权码保护
+- 开放重定向
+- 混淆代理问题
+- 访问令牌权限限制
+
+基础协议
+
+# 授权
+
+Copy page
+
+Copy page
+
+协议修订版 : draft
+
+## ​ 概述
+
+### ​ 目的和范围
+
+Model Context Protocol在传输级别提供授权能力，使MCP客户端能够代表资源所有者向受限的MCP服务器发出请求。本规范定义了基于HTTP的传输的授权流程。
+
+### ​ 协议要求
+
+授权对MCP实现是 可选的 。当受支持时：
+
+- 使用基于HTTP传输的实现 应该 符合本规范。
+
+- 使用STDIO传输的实现 不应该 遵循本规范，而是从环境中检索凭据。
+
+- 使用替代传输的实现 必须 遵循其协议的既定安全最佳实践。
+
+### ​ 标准合规性
+
+此授权机制基于下面列出的既定规范，但实施了其功能的选定子集以确保安全性和互操作性，同时保持简单性：
+
+- OAuth 2.1 IETF草稿 ( draft-ietf-oauth-v2-1-13 )
+
+- OAuth 2.0授权服务器元数据 ( RFC8414 )
+
+- OAuth 2.0动态客户端注册协议 ( RFC7591 )
+
+- OAuth 2.0受保护资源元数据 ( RFC9728 )
+
+## ​ 授权流程
+
+### ​ 角色
+
+受保护的_MCP服务器_充当 OAuth 2.1资源服务器 ，能够使用访问令牌接受和响应受保护的资源请求。
+_MCP客户端_充当 OAuth 2.1客户端 ，代表资源所有者发出受保护的资源请求。
+_授权服务器_负责与用户交互（如果必要）并为MCP服务器使用发行访问令牌。
+The implementation details of the authorization server are beyond the scope of this specification. It may be hosted with the
+resource server or a separate entity. The Authorization Server Discovery section
+specifies how an MCP server indicates the location of its corresponding authorization server to a client.
+
+### ​ Overview
+
+- Authorization servers MUST implement OAuth 2.1 with appropriate security measures for both confidential and public clients.
+
+- Authorization servers and MCP clients SHOULD support the OAuth 2.0 Dynamic Client Registration Protocol ( RFC7591 ).
+
+- MCP servers MUST implement OAuth 2.0 Protected Resource Metadata ( RFC9728 ). MCP clients MUST use OAuth 2.0 Protected Resource Metadata for authorization server discovery.
+
+- MCP authorization servers MUST provide at least one of the following discovery mechanisms: OAuth 2.0 Authorization Server Metadata ( RFC8414 )
+
+- OpenID Connect Discovery 1.0
+
+MCP clients MUST support both discovery mechanisms to obtain the information required to interact with the authorization server.
+
+### ​ 授权服务器发现
+
+本部分描述了MCP服务器向MCP客户端公布其关联授权服务器的机制，以及MCP客户端确定授权服务器端点和支持能力的发现过程。
+
+#### ​ 授权服务器位置
+
+MCP服务器 必须 实现OAuth 2.0受保护资源元数据( RFC9728 )规范，以指示授权服务器的位置。由MCP服务器返回的受保护资源元数据文档 必须 包含 authorization_servers 字段，其中至少包含一个授权服务器。
+authorization_servers 的具体使用超出了本规范的范围；实现者应参考OAuth 2.0受保护资源元数据( RFC9728 )以获取实现细节的指导。
+实现者应注意，受保护资源元数据文档可以定义多个授权服务器。选择使用哪个授权服务器的责任在于MCP客户端，按照 RFC9728第7.6节”授权服务器” 中指定的指导方针。
+
+#### ​ 受保护资源元数据发现要求
+
+MCP服务器 必须 实现以下发现机制之一，以向MCP客户端提供授权服务器位置信息：
+
+- WWW-Authenticate头 ：在返回 401 Unauthorized 响应时，在 WWW-Authenticate HTTP头下的 resource_metadata 中包含资源元数据URL，如 RFC9728第5.1节 所述。
+
+- 知名URI ：按照 RFC9728 中的规范在知名URI上提供元数据。可以是： 在服务器的MCP端点路径上： https://example.com/public/mcp 可以在 https://example.com/.well-known/oauth-protected-resource/public/mcp 上托管元数据
+
+- 在根目录上： https://example.com/.well-known/oauth-protected-resource
+
+MCP客户端 必须 支持两种发现机制，并在存在时使用从解析的 WWW-Authenticate 头中提取的资源元数据URL；否则，它们 必须 按照上述顺序回退到构造和请求知名URI。
+MCP服务器 应该 在 WWW-Authenticate 头中包含 scope 参数，如 RFC 6750第3节 中所定义，以指示访问资源所需的范围。这为客户端提供了在授权期间请求适当范围的即时指导，按照最小权限原则，并防止客户端请求过多权限。
+WWW-Authenticate 挑战中包含的范围 可以 匹配 scopes_supported 、其子集或超集，或既不是严格子集也不是超集的其他集合。客户端 不得 假设挑战范围集与 scopes_supported 之间的任何特定集合关系。客户端 必须 将挑战中提供的范围视为满足当前请求的权威范围。服务器 应该 努力保持范围集合构造的一致性，但不需要通过 scopes_supported 显示每个动态发行的范围。
+包含范围指导的401响应示例：
+
+HTTP / 1.1 401 Unauthorized
+WWW-Authenticate : Bearer resource_metadata="https://mcp.example.com/.well-known/oauth-protected-resource",
+scope="files:read"
+
+MCP客户端 必须 能够解析 WWW-Authenticate 头，并对来自MCP服务器的 HTTP 401 Unauthorized 响应做出适当响应。
+如果 scope 参数不存在，客户端 应该 应用 范围选择策略 部分中定义的回退行为。
+
+#### ​ 授权服务器元数据发现
+
+为了处理不同的发行者URL格式，并确保与OAuth 2.0授权服务器元数据和OpenID Connect Discovery 1.0规范的互操作性，MCP客户端 必须 在发现授权服务器元数据时尝试多个知名端点。
+发现方法基于 RFC8414第3.1节”授权服务器元数据请求” 用于OAuth 2.0授权服务器元数据发现，以及 RFC8414第5节”兼容性说明” 用于OpenID Connect Discovery 1.0互操作性。
+对于具有路径组件的发行者URL（例如， https://auth.example.com/tenant1 ），客户端 必须 按以下优先顺序尝试端点：
+
+- 带路径插入的OAuth 2.0授权服务器元数据： https://auth.example.com/.well-known/oauth-authorization-server/tenant1
+
+- 带路径插入的OpenID Connect Discovery 1.0： https://auth.example.com/.well-known/openid-configuration/tenant1
+
+- OpenID Connect Discovery 1.0路径追加： https://auth.example.com/tenant1/.well-known/openid-configuration
+
+对于没有路径组件的发行者URL（例如， https://auth.example.com ），客户端 必须 尝试：
+
+- OAuth 2.0授权服务器元数据： https://auth.example.com/.well-known/oauth-authorization-server
+
+- OpenID Connect Discovery 1.0： https://auth.example.com/.well-known/openid-configuration
+
+#### ​ 序列图
+
+以下图表概述了一个示例流程：
+
+### ​ 动态客户端注册
+
+MCP客户端和授权服务器 应该 支持OAuth 2.0动态客户端注册协议 RFC7591 ，以允许MCP客户端在没有用户交互的情况下获取OAuth客户端ID。这为客户端提供了与新授权服务器自动注册的标准化方式，这对MCP至关重要，因为：
+
+- 客户端可能事先不知道所有可能的MCP服务器及其授权服务器。
+
+- 手动注册会为用户造成摩擦。
+
+- 它实现了与新MCP服务器及其授权服务器的无缝连接。
+
+- 授权服务器可以实施自己的注册策略。
+
+任何_不支持_动态客户端注册的授权服务器都需要提供获取客户端ID的替代方式（如果适用，还包括客户端凭据）。对于这样的授权服务器，MCP客户端将不得不：
+
+- 硬编码一个客户端ID（如果适用，还包括客户端凭据），专门供MCP客户端在与该授权服务器交互时使用，或
+
+- 向用户呈现一个UI，允许他们在注册OAuth客户端后输入这些细节（例如，通过服务器托管的配置界面）。
+
+#### ​ 范围选择策略
+
+在实施授权流程时，MCP客户端 应该 遵循最小权限原则，只请求其预期操作所需的范围。在初始授权握手期间，MCP客户端 应该 遵循以下优先顺序进行范围选择：
+
+- 使用来自401响应的初始 WWW-Authenticate 头的 scope 参数 ，如果提供的话
+
+- 如果 scope 不可用 ，使用受保护资源元数据文档中 scopes_supported 定义的所有范围，如果 scopes_supported 未定义则省略 scope 参数。
+
+这种方法适应了MCP客户端的通用性质，它们通常缺乏领域特定知识来做出关于单个范围选择的明智决策。请求所有可用范围允许授权服务器和最终用户在同意过程中确定适当权限。
+这种方法最小化了用户摩擦，同时遵循最小权限原则。 scopes_supported 字段旨在表示基本功能所需的最小范围集合（请参阅 范围最小化 ），通过 范围挑战处理 部分中描述的逐步授权流程步骤增量请求额外范围。
+
+### ​ 授权流程步骤
+
+完整的授权流程按以下步骤进行：
+
+#### ​ 资源参数实现
+
+MCP客户端 必须 按照 RFC 8707 中定义的OAuth 2.0资源指示符实施，以明确指定为其请求令牌的目标资源。 resource 参数：
+
+- 必须 包含在授权请求和令牌请求中。
+
+- 必须 标识客户端打算使用令牌的MCP服务器。
+
+- 必须 使用 RFC 8707第2节 中定义的MCP服务器的规范URI。
+
+##### 规范服务器URI
+
+在本规范中，MCP服务器的规范URI定义为 RFC 8707第2节 中指定的资源标识符，并与 RFC 9728 中的 resource 参数保持一致。
+MCP客户端 应该 为其打算访问的MCP服务器提供尽可能具体的URI，按照 RFC 8707 中的指导。虽然规范形式使用小写的方案和主机组件，但实现 应该 为了健壮性和互操作性接受大写的方案和主机组件。
+有效规范URI的示例：
+
+- https://mcp.example.com/mcp
+
+- https://mcp.example.com
+
+- https://mcp.example.com:8443
+
+- https://mcp.example.com/server/mcp （当路径组件对于标识单个MCP服务器是必要的时候）
+
+无效规范URI的示例：
+
+- mcp.example.com （缺少方案）
+
+- https://mcp.example.com#fragment （包含片段）
+
+注意： 虽然 https://mcp.example.com/ （带尾随斜杠）和 https://mcp.example.com （不带尾随斜杠）根据 RFC 3986 都是技术上有效的绝对URI，但实现 应该 为了更好的互操作性一致使用不带尾随斜杠的形式，除非尾随斜杠对特定资源具有语义意义。
+
+例如，如果访问位于 https://mcp.example.com 的MCP服务器，授权请求将包括：
+
+&resource=https%3A%2F%2Fmcp.example.com
+
+MCP客户端 必须 发送此参数，无论授权服务器是否支持它。
+
+### ​ Access Token Usage
+
+#### ​ Token Requirements
+
+Access token handling when making requests to MCP servers MUST conform to the requirements defined in
+OAuth 2.1 Section 5 “Resource Requests” .
+Specifically:
+
+- MCP client MUST use the Authorization request header field defined in OAuth 2.1 Section 5.1.1 :
+
+Authorization: Bearer <access-token>
+
+Note that authorization MUST be included in every HTTP request from client to server,
+even if they are part of the same logical session.
+
+- Access tokens MUST NOT be included in the URI query string
+
+Example request:
+
+GET /mcp HTTP / 1.1
+Host : mcp.example.com
+Authorization : Bearer eyJhbGciOiJIUzI1NiIs...
+
+#### ​ Token Handling
+
+MCP servers, acting in their role as an OAuth 2.1 resource server, MUST validate access tokens as described in
+OAuth 2.1 Section 5.2 .
+MCP servers MUST validate that access tokens were issued specifically for them as the intended audience,
+according to RFC 8707 Section 2 .
+If validation fails, servers MUST respond according to
+OAuth 2.1 Section 5.3
+error handling requirements. Invalid or expired tokens MUST receive a HTTP 401
+response.
+MCP clients MUST NOT send tokens to the MCP server other than ones issued by the MCP server’s authorization server.
+Authorization servers MUST only accept tokens that are valid for use with their
+own resources.
+MCP servers MUST NOT accept or transit any other tokens.
+
+### ​ 错误处理
+
+服务器 必须 为授权错误返回适当的HTTP状态码：
+
+状态码 | 描述 | 使用 |
+
+401 | 未授权 | 需要授权或令牌无效 |
+
+403 | 禁止 | 无效范围或权限不足 |
+
+400 | 错误请求 | 格式错误的授权请求 |
+
+#### ​ 范围挑战处理
+
+本部分涵盖了在运行时操作期间处理范围不足错误的情况，此时客户端已经拥有令牌但需要额外权限。这遵循了 OAuth 2.1第5节 中定义的错误处理模式，并利用了 RFC 9728 (OAuth 2.0受保护资源元数据) 中的元数据字段。
+
+##### 运行时范围不足错误
+
+当客户端在运行时操作中使用具有不足范围的访问令牌发出请求时，服务器 应该 响应：
+
+- HTTP 403 Forbidden 状态码（按照 RFC 6750第3.1节 ）
+
+- 带有 Bearer 方案的 WWW-Authenticate 头和附加参数： error="insufficient_scope" - 指示授权失败的具体类型
+
+- scope="required_scope1 required_scope2" - 指定操作所需的最小范围
+
+- resource_metadata - 受保护资源元数据文档的URI（与401响应保持一致）
+
+- error_description （可选）- 错误的易读描述
+
+服务器范围管理 ：在响应范围不足错误时，服务器 应该 在 scope 参数中包含满足当前请求所需的范围。
+Servers have flexibility in determining which scopes to include:
+
+- Minimum approach : Include the newly-required scopes for the specific operation. Include any existing granted scopes as well, if they are required, to prevent clients from losing previously granted permissions.
+
+- Recommended approach : Include both existing relevant scopes and newly required scopes to prevent clients from losing previously granted permissions
+
+- Extended approach : Include existing scopes, newly required scopes, and related scopes that commonly work together
+
+The choice depends on the server’s assessment of user experience impact and authorization friction.
+Servers SHOULD be consistent in their scope inclusion strategy to provide predictable behavior for clients.
+Servers SHOULD consider the user experience impact when determining which scopes to include in the
+response, as misconfigured scopes may require frequent user interaction.
+Example insufficient scope response:
+
+HTTP / 1.1 403 Forbidden
+WWW-Authenticate : Bearer error="insufficient_scope",
+scope="files:read files:write user:profile",
+resource_metadata="https://mcp.example.com/.well-known/oauth-protected-resource",
+error_description="Additional file write permission required"
+
+##### Step-Up Authorization Flow
+
+Clients will receive scope-related errors during initial authorization or at runtime ( insufficient_scope ).
+Clients SHOULD respond to these errors by requesting a new access token with an increased set of scopes via a step-up authorization flow or handle the errors in other, appropriate ways.
+Clients acting on behalf of a user SHOULD attempt the step-up authorization flow. Clients acting on their own behalf ( client_credentials clients)
+MAY attempt the step-up authorization flow or abort the request immediately.
+The flow is as follows:
+
+- Parse error information from the authorization server response or WWW-Authenticate header
+
+- Determine required scopes as outlined in Scope Selection Strategy .
+
+- Initiate (re-)authorization with the determined scope set
+
+- Retry the original request with the new authorization no more than a few times and treat this as a permanent authorization failure
+
+Clients SHOULD implement retry limits and SHOULD track scope upgrade attempts to avoid
+repeated failures for the same resource and operation combination.
+
+## ​ 安全考虑
+
+实现 必须 遵循 OAuth 2.1第7节”安全考虑” 中列出的OAuth 2.1安全最佳实践。
+
+### ​ 令牌受众绑定和验证
+
+RFC 8707 资源指示符通过在授权服务器支持该能力时将令牌绑定到其预期受众来提供关键安全益处。为了启用当前和未来的采用：
+
+- MCP客户端 必须 按照 资源参数实现 部分中的规定在授权和令牌请求中包含 resource 参数
+
+- MCP服务器 必须 验证呈现给它们的令牌是否专门为其使用而发行
+
+安全最佳实践文档 概述了为什么令牌受众验证至关重要以及为什么令牌传递被明确禁止。
+
+### ​ 令牌盗窃
+
+获得客户端存储的令牌、或服务器上缓存或记录的令牌的攻击者可以使用看起来对资源服务器合法的请求访问受保护资源。
+客户端和服务器 必须 实施安全的令牌存储并遵循OAuth最佳实践，如 OAuth 2.1第7.1节 中概述。
+授权服务器 应该 发行短期访问令牌以减少泄露令牌的影响。对于公共客户端，授权服务器 必须 按照 OAuth 2.1第4.3.1节”令牌端点扩展” 中描述的方式轮换刷新令牌。
+
+### ​ 通信安全
+
+实现 必须 遵循 OAuth 2.1第1.5节”通信安全” 。
+具体来说：
+
+- 所有授权服务器端点 必须 通过HTTPS提供服务。
+
+- 所有重定向URI 必须 是 localhost 或使用HTTPS。
+
+### ​ 授权码保护
+
+获得授权响应中包含的授权码访问权限的攻击者可以尝试将授权码兑换为访问令牌或以其他方式使用授权码。（在 OAuth 2.1第7.5节 中进一步描述）
+为了缓解这一点，MCP客户端 必须 按照 OAuth 2.1第7.5.2节 实施PKCE，并 必须 在继续授权之前验证PKCE支持。PKCE通过要求客户端创建秘密验证器-挑战对来帮助防止授权码拦截和注入攻击，确保只有原始请求者可以交换授权码以获取令牌。
+MCP客户端 必须 在技术上能够时使用 S256 码挑战方法，如 OAuth 2.1第4.1.1节 所要求。
+由于OAuth 2.1和PKCE规范没有定义客户端发现PKCE支持的机制，MCP客户端 必须 依赖授权服务器元数据来验证此能力：
+
+- OAuth 2.0授权服务器元数据 ：如果 code_challenge_methods_supported 不存在，则授权服务器不支持PKCE，MCP客户端 必须 拒绝继续。
+
+- OpenID Connect Discovery 1.0 ：虽然 OpenID提供商元数据 没有定义 code_challenge_methods_supported ，但OpenID提供商通常包含此字段。MCP客户端 必须 验证提供商元数据响应中是否存在 code_challenge_methods_supported 。如果该字段不存在，MCP客户端 必须 拒绝继续。
+
+提供OpenID Connect Discovery 1.0的授权服务器 必须 在其元数据中包含 code_challenge_methods_supported 以确保MCP兼容性。
+
+### ​ 开放重定向
+
+攻击者可以制作恶意重定向URI来将用户引导到钓鱼站点。
+MCP客户端 必须 在授权服务器上注册重定向URI。
+授权服务器 必须 根据预注册值验证确切的重定向URI以防止重定向攻击。
+MCP客户端 应该 在授权码流程中使用和验证状态参数，并丢弃任何不包含或与原始状态不匹配的结果。
+授权服务器 必须 采取预防措施以防止将用户代理重定向到不受信任的URI，按照 OAuth 2.1第7.12.2节 中列出的建议
+授权服务器 应该 只在信任重定向URI时自动重定向用户代理。如果URI不受信任，授权服务器可以通知用户并依靠用户做出正确决定。
+
+### ​ 混淆代理问题
+
+攻击者可以利用作为第三方API中间人的MCP服务器，导致 混淆代理漏洞 。通过使用被盗授权码，他们可以在没有用户同意的情况下获得访问令牌。
+使用静态客户端ID的MCP代理服务器 必须 在转发到第三方授权服务器之前为每个动态注册的客户端获得用户同意（这可能需要额外同意）。
+
+### ​ 访问令牌权限限制
+
+如果服务器接受为其他资源发行的令牌，攻击者可以获得未经授权的访问或以其他方式危害MCP服务器。
+此漏洞有两个关键维度：
+
+- **受众验证失败。**当MCP服务器不验证令牌是否专门为其意图发行时（例如，通过受众声明，如 RFC9068 中所述），它可能接受最初为其他服务发行的令牌。这打破了基本的OAuth安全边界，允许攻击者在不同服务中重用合法令牌。
+
+- **令牌传递。**如果MCP服务器不仅接受具有错误受众的令牌，而且还将这些未修改的令牌转发到下游服务，它可能导致 ”混淆代理”问题 ，其中下游API可能错误地信任令牌，就像它来自MCP服务器或假设令牌已被上游API验证一样。请参阅安全最佳实践指南的 令牌传递部分 以获取更多详细信息。
+
+MCP服务器 必须 在处理请求之前验证访问令牌，确保访问令牌专门为MCP服务器发行，并采取所有必要步骤确保不会向未经授权方返回数据。
+MCP服务器 必须 遵循 OAuth 2.1 - 第5.2节 中的指导方针来验证入站令牌。
+MCP服务器 必须 只接受专门为其意图的令牌，并 必须 拒绝不将其包含在受众声明中或以其他方式验证它们是令牌预期接收者的令牌。请参阅 安全最佳实践令牌传递部分 以获取详细信息。
+如果MCP服务器向上游API发出请求，它可能充当它们的OAuth客户端。用于上游API的访问令牌是由上游授权服务器发行的单独令牌。MCP服务器 不得 传递它从MCP客户端收到的令牌。
+MCP客户端 必须 实施并使用 RFC 8707 - OAuth 2.0资源指示符 中定义的 resource 参数，以明确指定为其请求令牌的目标资源。此要求与 RFC 9728第7.4节 中的建议保持一致。这确保访问令牌绑定到其预期资源，不能跨不同服务滥用。
+
+传输机制 安全最佳实践
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform

@@ -1,0 +1,399 @@
+# 图吧工具箱
+
+- Group: AOE.TOP
+- Source URL: https://tbtool.aoe.top/
+- Origin: https://tbtool.aoe.top
+- Captured pages: 2/4
+- Empty text pages: 0
+- Text characters: 3611
+- Generated: 2026-06-18T03:10:14.671Z
+
+## Captured Page Index
+
+- [图吧工具箱官网_图拉丁吧硬件检测工具箱下载地址 - 专业免费开源](/pages/tbtool-aoe-top/tbtool-aoe-top-home-81100ea2.md) - captured - 200 - 2591 chars - https://tbtool.aoe.top/
+- [图吧工具箱](/pages/tbtool-aoe-top/tbtool-aoe-top-sitemap-xml-40eb80d9.md) - captured - 200 - 1020 chars - https://tbtool.aoe.top/sitemap.xml
+
+## Fetch Failures
+
+- https://tbtool.aoe.top/llms.txt: Not Found
+- https://tbtool.aoe.top/llms-full.txt: Not Found
+
+
+## Page Content
+
+# 图吧工具箱官网_图拉丁吧硬件检测工具箱下载地址 - 专业免费开源
+
+Source: https://tbtool.aoe.top/
+Friendly site: 图吧工具箱
+Group: AOE.TOP
+Fetched: 2026-06-18T02:27:09.821Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 图吧工具箱（图拉丁吧工具箱）官网，提供图吧工具箱最新下载地址。始于2014年，持续10年更新的专业硬件检测工具集合，集成100+工具，完全免费、开源、绿色、纯净。适用于装机验机、故障诊断、性能测试。
+
+## Content
+
+🔧
+图吧工具箱
+
+- 功能特色
+
+- 工具列表
+
+- 立即下载
+
+- 常见问题
+
+- 关于
+
+# 图拉丁吧工具箱
+
+开源、免费、绿色、纯净的硬件检测工具合集
+
+专为所有计算机硬件极客、DIY爱好者、各路大神及小白制作
+
+⚡ 100+ 专业工具
+🎯 始于2014，持续10年更新
+📦 202.03MB 绿色版
+
+📦 版本： 2026.01.1
+正式版
+|
+发布日期： 2026年1月9日
+|
+大小：202.03MB
+
+直接下载
+网盘下载 (推荐)
+其他下载
+
+## 为什么选择图吧工具箱
+
+�
+
+### 专业硬件检测
+
+专注于收集各种硬件检测、评分、测试工具，涵盖CPU、内存、显卡、硬盘、主板等各类硬件检测工具，常见工具均有收集
+
+✨
+
+### 纯净无捆绑
+
+无任何捆绑强制安装行为，不写入注册表，没有任何目录及文件操作，提供完全纯净的使用体验方式
+
+🌿
+
+### 绿色免安装
+
+提供ZIP压缩包，无需安装、注册等复杂操作，解压即可使用。用完可直接删除，无需卸载
+
+🆓
+
+### 开源免费
+
+可直接下载源码，并提供硬件检测SDK，主流编程语言无门槛调用，且无需授权、免费使用无任何限制
+
+🔄
+
+### 稳定更新
+
+不忘初心，始于2014，持续10年稳定更新，坚持做能方便大家使用的硬件检测工具箱
+
+�
+
+### 社区支持
+
+拥有活跃的用户社区，多个QQ群交流硬件知识，共同学习进步，遇到问题可及时获得帮助
+
+## 内置工具集合
+
+涵盖硬件检测、压力测试、性能评估等各个方面的专业工具
+
+### 🖥️ CPU 处理器工具
+
+#### CPU-Z
+
+最权威的处理器信息检测工具
+
+CPU检测
+
+#### Prime95
+
+专业CPU压力测试与稳定性检测
+
+压力测试
+
+#### Core Temp
+
+实时监控CPU核心温度
+
+温度监控
+
+#### CineBench
+
+专业渲染性能基准测试
+
+性能测试
+
+### 💾 内存检测工具
+
+#### MemTest86
+
+权威内存错误检测工具
+
+内存测试
+
+#### AIDA Memory
+
+内存性能测试与延迟检测
+
+性能测试
+
+#### Thaiphoon Burner
+
+内存颗粒信息读取工具
+
+信息读取
+
+#### MaxxMEM
+
+内存带宽性能测试
+
+性能测试
+
+### 🎮 显卡测试工具
+
+#### GPU-Z
+
+显卡信息检测权威工具
+
+显卡检测
+
+#### 3DMark
+
+专业图形性能基准测试
+
+跑分测试
+
+#### FurMark
+
+显卡压力测试烤机工具
+
+压力测试
+
+#### MSI Afterburner
+
+显卡超频与监控工具
+
+超频工具
+
+### 💿 硬盘存储工具
+
+#### CrystalDiskInfo
+
+硬盘健康状态检测
+
+健康检测
+
+#### HD Tune Pro
+
+硬盘性能测试与坏道检测
+
+性能测试
+
+#### AS SSD Benchmark
+
+SSD固态硬盘性能测试
+
+SSD测试
+
+#### HDDScan
+
+硬盘扫描与SMART信息
+
+扫描工具
+
+### 🔧 综合监控工具
+
+#### HWiNFO
+
+全面硬件信息与监控
+
+综合检测
+
+#### AIDA64
+
+专业系统信息工具
+
+综合检测
+
+#### HWMonitor
+
+硬件温度监控
+
+温度监控
+
+#### ThrottleStop
+
+CPU调频与降温工具
+
+优化工具
+
+💡 以上仅为部分精选工具，完整版包含
+100+
+专业硬件检测工具
+
+## 关于工具箱
+
+图吧工具箱 （ 图拉丁吧工具箱 ）是开源、免费、绿色、纯净的硬件检测工具合集，专为所有计算机硬件极客、DIY爱好者、各路大神及小白制作。
+集成大量常见硬件检测、评分工具，一键下载、方便使用。本站为 图吧工具箱官网 ，提供 图吧工具箱地址 及最新版本下载。
+
+100万+
+
+累计下载
+
+100+
+
+集成工具
+
+10年+
+
+持续更新
+
+100%
+
+免费使用
+
+## 适用场景
+
+无论您是新手还是专业用户，图吧工具箱都能满足您的需求
+
+🔍
+
+### 装机验机
+
+新电脑硬件配置验证，确保硬件规格与购买清单一致，避免被坑
+
+✓ CPU验证 ✓ 显卡检查 ✓ 内存确认
+
+🛠️
+
+### 故障诊断
+
+硬件问题排查定位，快速找出系统不稳定的根本原因
+
+✓ 温度检测 ✓ 故障定位 ✓ 瓶颈分析
+
+⚡
+
+### 性能优化
+
+硬件基准评估测试，为超频和系统优化提供数据支持
+
+✓ 硬件评估 ✓ 超频验证 ✓ 散热评估
+
+🔧
+
+### 日常维护
+
+定期硬件健康检查，预防硬件故障，延长设备使用寿命
+
+✓ 健康监控 ✓ 趋势分析 ✓ 衰减检测
+
+## 常见问题
+
+### 图吧工具箱是免费软件吗？
+
+是的，图吧工具箱是完全免费的开源软件，始于2014年，持续10年免费更新。无任何隐藏费用，无捆绑软件，无广告。
+
+### 支持哪些操作系统版本？
+
+图吧工具箱支持Windows XP、Windows Vista、Windows
+7、Windows 8、Windows 10和Windows
+11等主流Windows操作系统。
+
+### 需要安装吗？如何使用？
+
+不需要安装。图吧工具箱是绿色软件，下载压缩包后解压到任意文件夹，双击主程序即可运行，用完可直接删除。
+
+### 包含哪些主要检测工具？
+
+包含CPU-Z、GPU-Z、MemTest86、CrystalDiskInfo、Prime95、FurMark、3DMark、AIDA64、HWiNFO等100多个专业硬件检测工具。
+
+### 使用时需要管理员权限吗？
+
+建议以管理员权限运行，这样可以获取更完整的硬件信息。部分底层检测工具需要管理员权限才能正常工作。
+
+### 是否安全？会影响系统吗？
+
+完全安全。图吧工具箱不写入注册表，不修改系统文件，所有工具都是只读检测，不会对系统造成任何影响。
+
+#### 关于我们
+
+图吧工具箱 （ 图拉丁吧工具箱 ）始于2014年，持续10年免费更新，专注于为硬件爱好者提供专业的检测工具集合。
+
+友情链接
+
+友链加载中...
+
+© 2025 图吧工具箱（图拉丁吧工具箱）- 图吧工具箱官网
+
+开源项目 | 免费使用 | 持续更新 | 纯净无广告 |
+图吧工具箱地址
+
+
+# 图吧工具箱
+
+Source: https://tbtool.aoe.top/sitemap.xml
+Friendly site: 图吧工具箱
+Group: AOE.TOP
+Fetched: 2026-06-18T02:27:09.615Z
+Status: 200
+Content-Type: application/xml
+Content-Status: captured
+
+## Content
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<url>
+<loc>https://tbtool.aoe.top/</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1.0</priority>
+</url>
+<url>
+<loc>https://tbtool.aoe.top/#features</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://tbtool.aoe.top/#tools</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://tbtool.aoe.top/#download</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://tbtool.aoe.top/#faq</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://tbtool.aoe.top/#about</loc>
+<lastmod>2025-06-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+</urlset>
+

@@ -1,0 +1,255 @@
+# 【Nuxt3】使用Pinia | 小莫的博客园
+
+Source: https://blog.aoe.top/NodeJS/Nuxt/611
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:30:02.920Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: Pinia 是什么？Pinia 是 Vue 的专属状态管理库，它允许你跨组件或页面共享状态。如果你熟悉组合式 API 的话，你可能会认为可以通过一行简单的 export const state = reactive({}) 来共享一个全局状态。对于单页应用来说确实可以，但如果应用在服务器端渲染，这可能会使你的应用暴露出一些安全漏洞。 而如果使用 Pinia，即使在小型单页应用中，你也可以
+
+## Content
+
+# 【Nuxt3】使用Pinia
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. Pinia 是什么？
+- 2. 对比 Vuex 3.x/4.x
+- 3. 安装 Pinia
+- 4. 配置
+- 5. 在 setup()外部使用 store
+- 6. 自动引入
+- 7. 定义 Store
+- 8. 其他地方使用
+- 9. 备注
+
+### Pinia 是什么？
+
+Pinia 是 Vue 的专属状态管理库，它允许你跨组件或页面共享状态。如果你熟悉组合式 API 的话，你可能会认为可以通过一行简单的 export const state = reactive({}) 来共享一个全局状态。对于单页应用来说确实可以，但如果应用在服务器端渲染，这可能会使你的应用暴露出一些安全漏洞。 而如果使用 Pinia，即使在小型单页应用中，你也可以获得如下功能：
+
+- Devtools 支持 追踪 actions、mutations 的时间线
+
+- 在组件中展示它们所用到的 Store
+
+- 让调试更容易的 Time travel
+
+- 热更新 不必重载页面即可修改 Store
+
+- 开发时可保持当前的 State
+
+- 插件：可通过插件扩展 Pinia 功能
+
+- 为 JS 开发者提供适当的 TypeScript 支持以及自动补全功能。
+
+- 支持服务端渲染
+
+### 对比 Vuex 3.x/4.x
+
+Vuex 3.x 只适配 Vue 2，而 Vuex 4.x 是适配 Vue 3 的。
+
+Pinia API 与 Vuex(<=4) 也有很多不同，即：
+
+- mutation 已被弃用。它们经常被认为是极其冗余的。它们初衷是带来 devtools 的集成方案，但这已不再是一个问题了。
+
+- 无需要创建自定义的复杂包装器来支持 TypeScript，一切都可标注类型，API 的设计方式是尽可能地利用 TS 类型推理。
+
+- 无过多的魔法字符串注入，只需要导入函数并调用它们，然后享受自动补全的乐趣就好。
+
+- 无需要动态添加 Store，它们默认都是动态的，甚至你可能都不会注意到这点。注意，你仍然可以在任何时候手动使用一个 Store 来注册它，但因为它是自动的，所以你不需要担心它。
+
+- 不再有嵌套结构的模块。你仍然可以通过导入和使用另一个 Store 来隐含地嵌套 stores 空间。虽然 Pinia 从设计上提供的是一个扁平的结构，但仍然能够在 Store 之间进行交叉组合。你甚至可以让 Stores 有循环依赖关系。
+
+- 不再有可命名的模块。考虑到 Store 的扁平架构，Store 的命名取决于它们的定义方式，你甚至可以说所有 Store 都应该命名。
+
+### 安装 Pinia
+
+1
+
+|
+npm i pinia @pinia/nuxt --legacy-peer-deps
+
+|
+
+### 配置
+
+在 nuxt.config.js 文件中配置
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+|
+// nuxt.config.js
+export default defineNuxtConfig({
+// ... 其他配置
+modules: [
+// ...
+'@pinia/nuxt',
+],
+})
+
+|
+
+这样配置就完成了，正常使用 store 就好啦!
+
+### 在 setup()外部使用 store
+
+如果你想在 setup() 外部使用一个 store，记得把 pinia 对象传给 useStore()。我们会把它添加到上下文中，然后你就可以在 asyncData() 和 fetch() 中访问它了：
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+|
+import { useStore } from '~/stores/myStore'
+
+export default {
+asyncData({ $pinia }) {
+const store = useStore($pinia)
+},
+}
+
+|
+
+### 自动引入
+
+默认情况下，@pinia/nuxt 会暴露一个自动引入的方法：usePinia()，它类似于 getActivePinia()，但在 Nuxt 中效果更好。你可以添加自动引入来减轻你的开发工作：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+|
+// nuxt.config.js
+export default defineNuxtConfig({
+// ... 其他配置
+modules: [
+// ...
+[
+'@pinia/nuxt',
+{
+autoImports: [
+// 自动引入 `usePinia()`
+'defineStore',
+// 自动引入 `usePinia()` 并重命名为 `usePiniaStore()`
+['defineStore', 'definePiniaStore'],
+],
+},
+],
+],
+imports: {
+dirs: ['./stores'],
+},
+})
+
+|
+
+### 定义 Store
+
+新建一个 stores 文件夹，然后在里面新建任意文件，比如说 counter.ts ，基础内容：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+|
+export const useCounter = defineStore('counter', {
+state: () => ({
+n: 2,
+}),
+
+getters: {
+// 相当于计算属性
+double: (state) => state.n * 2,
+},
+
+actions: {
+// 修改 state 中的值
+increment(amount = 1)
+this.n += amount
+},
+},
+})
+
+|
+
+### 其他地方使用
+
+比如说在 App.vue 的 setup 语法糖中
+
+const counter = useCounter()
+
+// 获取 state 的值
+Let n = counter.$state.n
+
+// 获取 getters 中的 double 计算属性
+let double = counter.double
+
+// 调用 actions 中的 increment 方法
+counter.counter(1)
+
+### 备注
+
+能直接用 const counter = useCounter() 是因为我们在 nuxt.config.js 里面配置了 autoImports 和 imports ，而 useCounter 则是我们在 counter.ts 里面暴露时的变量名，
+大概要补充的应该就只有这一点了
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+Nuxt , pinia
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

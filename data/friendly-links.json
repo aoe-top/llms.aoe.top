@@ -1,0 +1,187 @@
+[
+  {
+    "group": "aoe_top",
+    "name": "小莫个人站",
+    "url": "https://www.aoe.top"
+  },
+  {
+    "group": "aoe_top",
+    "name": "小莫博客园",
+    "url": "https://blog.aoe.top"
+  },
+  {
+    "group": "aoe_top",
+    "name": "小莫网盘",
+    "url": "https://cloud.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "小莫Wiki",
+    "url": "https://wiki.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "小莫工具箱",
+    "url": "https://tools.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "小莫私有云",
+    "url": "https://pan.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "塔罗牌",
+    "url": "https://tarot.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "Gloss Mod Manager",
+    "url": "https://gmm.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "Native DB",
+    "url": "https://nativedb.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "MBTI 性格测试",
+    "url": "https://mbti.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "BDSM 倾向人格测试",
+    "url": "https://dbsm.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "PCL2",
+    "url": "https://pcl2.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "图吧工具箱",
+    "url": "https://tbtool.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "MD5 加密工具",
+    "url": "https://md5.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "AI工具库",
+    "url": "https://ai.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "动漫共和国",
+    "url": "https://dmghg.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "赞助小莫",
+    "url": "https://sponsor.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "PCL CE 社区版",
+    "url": "https://pcl-ce.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "洛克王国工具箱",
+    "url": "https://rocom.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "SBTI 测试",
+    "url": "https://sbti.aoe.top/"
+  },
+  {
+    "group": "aoe_top",
+    "name": "状态检测",
+    "url": "https://status.aoe.top"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "Winstep Nexus",
+    "url": "https://nexus.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "AI 记牌器",
+    "url": "https://aijpq.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "BongoCat",
+    "url": "https://bongocat.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "Gamma Panel",
+    "url": "https://gammapanel.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "MCP中文文档",
+    "url": "https://mcp.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "免费建站",
+    "url": "https://mkw.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "蘑菇下载器",
+    "url": "https://pcstory.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "SmokeAPI",
+    "url": "https://smokeapi.gjxx.dev/"
+  },
+  {
+    "group": "gjxx_dev",
+    "name": "工具导航",
+    "url": "https://www.gjxx.dev/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "Glosc AI",
+    "url": "https://www.gloscai.com/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "Glosc AI One",
+    "url": "https://one.gloscai.com/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "Glosc Copilot",
+    "url": "https://copilot.gloscai.com/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "Glosc Nutri",
+    "url": "https://nutri.gloscai.com/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "说猫语",
+    "url": "https://cat.gloscai.com/"
+  },
+  {
+    "group": "glosc_ai",
+    "name": "Glosc Authenticator",
+    "url": "https://2fa.gloscai.com/"
+  },
+  {
+    "group": "gloss_mod",
+    "name": "Gloss Mod 组",
+    "url": "https://www.glossmod.com/"
+  }
+]

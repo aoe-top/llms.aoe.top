@@ -1,0 +1,144 @@
+# 【Python】爬虫 | 小莫的博客园
+
+Source: https://blog.aoe.top/Python/357
+Friendly site: 小莫博客园
+Group: AOE.TOP
+Fetched: 2026-06-18T02:29:09.010Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 突然想研究一下Python的爬虫功能，简单的做一下笔记： 安装依赖库1pip install urllib3 库的相关说明：https://urllib3.readthedocs.io/en/latest/ 示例代码： 1234567891011import urllib3import json# 建立连接http = urllib3.PoolManager()#使用GET方式连接r = htt
+
+## Content
+
+# 【Python】爬虫
+
+- 2023-07-07
+
+- 作者 小莫
+
+- 1. 安装依赖库
+- 2. 实例-获取Script Hook RDR2的更新状态
+
+突然想研究一下Python的爬虫功能，简单的做一下笔记：
+
+### 安装依赖库
+
+1
+
+|
+pip install urllib3
+
+|
+
+库的相关说明： https://urllib3.readthedocs.io/en/latest/
+
+示例代码：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+|
+import urllib3
+import json
+
+# 建立连接
+http = urllib3.PoolManager()
+#使用GET方式连接
+r = http.request( 'GET' , 'https://mod.3dmgame.com/mod/API/147160' )
+#打印整个页面
+print (r.data)
+#由于页面的json,所有可以直接用json解析
+print (json.loads(r.data.decode( 'utf-8' )))
+
+|
+
+### 实例-获取Script Hook RDR2的更新状态
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+|
+
+import urllib3
+import re
+# 创建连接
+http = urllib3.PoolManager()
+# 使用GET方法连接网站
+r = http.request( 'GET' , 'http://www.dev-c.com/rdr2/scripthookrdr2' )
+# 定义正则表达式
+pattern = re. compile ( '<tr>.*?<th>Released</th>.*?<td>(.*?)</td>.*?' +
+'</tr>.*?<tr>.*?<th>Version</th>.*?<td>(.*?)</td>.*?</tr>.*?' +
+'<tr>.*?<th>Supported patches</th>.*?<td>(.*?)</td>.*?</tr>' ,re.S)
+# 匹配字段
+items = re.findall(pattern,r.data.decode( 'utf-8' ))
+# 打印匹配到的字段
+print (items)
+# 写入数据
+for item in items:
+Released = item[ 0 ]
+Version = item[ 1 ]
+Supported = item[ 2 ]
+# 打印输出
+print ( "更新时间：" +Released+ ",\n版本：" +Version+ ",\n支持版本：" +Supported)
+
+|
+
+输出结果：
+
+1
+2
+3
+4
+
+|
+[('15 Jan 2020', 'v1.0.1232.17', '1.0.1207.58/1232.17 and above')]
+更新时间：15 Jan 2020,
+版本：v1.0.1232.17,
+支持版本：1.0.1207.58/1232.17 and above
+
+|
+
+本作品采用 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议 进行许可
+
+打赏
+
+分享
+
+Python , 爬虫 , 笔记
+
+最后编辑：2026-05-07
+
+上一篇
+
+下一篇

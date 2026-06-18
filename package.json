@@ -1,0 +1,15 @@
+{
+  "name": "llms.aoe.top",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "dev": "node scripts/serve.mjs public 4173",
+    "serve": "node scripts/serve.mjs public 4173"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

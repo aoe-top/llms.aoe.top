@@ -1,0 +1,161 @@
+# 贡献者沟通 - Model Context Protocol
+
+Source: https://mcp.gjxx.dev/community/communication
+Friendly site: MCP中文文档
+Group: GJXX.DEV
+Fetched: 2026-06-18T02:27:26.479Z
+Status: 200
+Content-Type: text/html; charset=utf-8
+Content-Status: captured
+
+Description: 模型上下文协议社区的沟通策略和框架
+
+## Content
+
+## On this page
+
+- 沟通渠道 Discord
+- 公共频道（默认）
+- 私人频道（例外）
+- GitHub Discussions
+- GitHub Issues
+- 安全问题
+- 决策记录
+
+# 贡献者沟通
+
+Copy page
+
+模型上下文协议社区的沟通策略和框架
+
+Copy page
+
+本文档解释了如何在模型上下文协议 (MCP) 项目中进行沟通和协作。
+
+## ​ 沟通渠道
+
+简而言之：
+
+- Discord ：用于实时或临时讨论。
+
+- GitHub Discussions ：用于结构化的、较长形式的讨论。
+
+- GitHub Issues ：用于可操作的任务、错误报告和功能请求。
+
+- 对于安全敏感问题 ：遵循 SECURITY.md 中的流程。
+
+所有沟通均受我们的 行为准则 约束。我们期望所有参与者在所有渠道中保持尊重、专业和包容性的互动。
+
+### ​ Discord
+
+用于实时贡献者讨论和协作。该服务器围绕 MCP 贡献者 设计，不打算作为一般 MCP 支持的地方。
+Discord 服务器将同时拥有公共和私人频道。
+在此加入 Discord 服务器 。
+
+#### ​ 公共频道（默认）
+
+- 目的 ：开放社区参与、协作开发和透明项目协调。
+
+- 主要用例： 公共 SDK 和工具开发 ：从构思到发布规划的所有开发都在公共频道中进行（例如， #typescript-sdk-dev 、 #inspector-dev ）。
+
+- 工作组和兴趣小组 讨论
+
+- 社区入门 和贡献指导。
+
+- 社区反馈 和协作头脑风暴。
+
+- 公共 办公时间 和 维护者可用性 。
+
+- 避免： MCP 用户支持：参与者应阅读官方文档，并为问题或支持启动新的 GitHub Discussions。
+
+- 服务或产品营销：此 Discord 上的互动应保持供应商中立，不用于品牌建设或销售。除用作示例或对以规范为重点的对话的回应外，不鼓励提及品牌或产品。
+
+#### ​ 私人频道（例外）
+
+- 目的 ：机密协调和无法公开讨论的敏感事务。访问将限于指定的维护者。
+
+- 私人使用的严格标准 ： 安全事件 （CVE、协议漏洞）。
+
+- 人员事务 （维护者相关讨论、行为准则政策）。
+
+- 某些频道将被配置为 只读 。例如，这对于维护者决策制定很有用。
+
+- 需要 立即 或以其他方式 集中响应 的协调，面向有限受众。
+
+- 透明度 ： 所有影响社区的技术和治理决策 必须在 GitHub Discussions 和/或 Issues 中记录，并标有 notes 标签。
+
+- 某些与个别贡献者相关的事务 在适当情况下可能保持私密（例如，个人情况、纪律行动或其他敏感个人事务）。
+
+- 私人频道应作为**临时”事件室”**使用，而不是常规开发。
+
+Discord 上任何可能导致潜在决策或提案的重要讨论必须移至 GitHub Discussion 或 GitHub Issue，以创建持久、可搜索的记录。然后，提案将根据需要提升为完整的 PR，并关联工作项（GitHub Issues）。
+
+### ​ GitHub Discussions
+
+用于结构化的、长形式的讨论和辩论，涉及项目方向、功能、改进和社区主题。
+何时使用：
+
+- 项目路线图规划和里程碑讨论
+
+- 公告和发布沟通
+
+- 社区投票和共识构建过程
+
+- 带有上下文和理由的功能请求 如果特定仓库未启用 GitHub Discussions，请随时打开 GitHub Issue。
+
+### ​ GitHub Issues
+
+用于错误报告、功能跟踪和可操作的开发任务。
+何时使用：
+
+- 提交 SEP 提案（遵循 SEP 指南 ）
+
+- 带有可重现步骤的错误报告
+
+- 具有特定范围的文档改进
+
+- CI/CD 问题和基础设施问题
+
+- 发布任务和里程碑跟踪
+
+### ​ 安全问题
+
+不要公开发布安全问题。 相反：
+
+- 使用私人安全报告流程。对于协议级安全问题，请遵循 modelcontextprotocol GitHub 仓库中的 SECURITY.md 中的流程。
+
+- 直接联系首席维护者和/或 核心维护者 。
+
+- 遵循负责任披露指南。
+
+## ​ 决策记录
+
+所有 MCP 决策均在公共渠道中记录和捕获。
+
+- 技术决策 ： GitHub Issues 和 SEP。
+
+- 规范变更 ： 模型上下文协议网站 。
+
+- 流程变更 ： 社区文档 。
+
+- 治理决策和更新 ： GitHub Issues 和 SEP。
+
+记录决策时，我们将保留尽可能多的上下文：
+
+- 决策制定者
+
+- 背景上下文和动机
+
+- 考虑的选项
+
+- 选择方法的理由
+
+- 实施步骤
+
+治理和管理
+
+⌘ I
+
+github
+
+Powered by This documentation is built and hosted on Mintlify, a developer documentation platform
